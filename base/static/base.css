@@ -27,7 +27,6 @@
 /* https://stackoverflow.com/a/19723677/333403 */
 html, body {
     font-family: Roboto, sans-serif;
-/*     margin: -8px; */
     margin: 0px;
     padding: 0px;
     height:100%;
@@ -36,11 +35,8 @@ html, body {
 
 
 #outer-container {
-/*    min-height: calc(100vh - 95px); */
-/*    position:relative; */
    display: flex;
   flex-direction: column;
-/*   min-height: 97.2vh; */
   min-height: 100vh;
 }
 
@@ -49,7 +45,8 @@ html, body {
     display: inline-block;
   }
 
-  @media (max-width: 800px) {
+
+@media (max-width: 800px) {
     #header2 {
       display: block;
       text-align: right;
@@ -69,7 +66,6 @@ body {
 body a{
     color: inherit;
     text-decoration: underline dotted;
-/*     text-shadow: 0 0 1px rgba(200, 1, 1, 0.9); */
 }
 
 
@@ -80,8 +76,6 @@ body a:hover{
 
 .headerbar {
 
-/*     margin-right: -10px; */
-/*     margin-left: -10px; */
     color: var(--color-gray-dark-text);
     width: 100%;
     border: 1px solid #EEE;
@@ -112,8 +106,6 @@ body a:hover{
 blockquote {
 
     background-color: var(--color-quote-background);
-/*     color: red; */
-/*     font-style: italic; */
     padding-top: var(--padding-v-quote);
     padding-bottom: var(--padding-v-quote);
     padding-left: var(--padding-h-quote);
@@ -191,11 +183,6 @@ div.header a:hover{
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px 0 rgba(0,0,0,0.2);
     border-radius: 2px;
 
-    /*
-    background-color: #FAFAFA;
-    border: 3px solid #EEE;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.02), 0 6px 20px 0 rgba(0, 0, 0, 0.02);
-    */
 }
 .error {
     color: var(--color-red-dark-text);
@@ -204,9 +191,51 @@ div.header a:hover{
 
 }
 
-.form_input {
-    width: 98%;
+.form_input_fw {
+    width: 99%;
+    margin-bottom: 0.5em;
 }
+
+  .btn {
+    display: inline-block;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      border-left-color: transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  }
+
+  .btn:hover {
+    color: #212529;
+    text-decoration: none;
+  }
+  .btn-primary:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+  [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled), button:not(:disabled) {
+    cursor: pointer;
+  }
+  .btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+  }
 
 
 body hr{
@@ -225,10 +254,7 @@ body hr{
 
 
 .footer {
-/*   position: absolute; */
-/*   bottom: 0; */
   width: 100%;
-/*   height: 5.5rem;            /* Footer height */
 }
 
 .footerbar {
@@ -248,7 +274,6 @@ body hr{
     width: var(--width-content);
 
     padding: var(--padding-header);
-/*     padding-bottom: var(--padding-header); */
 
 }
 div.footer a{

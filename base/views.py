@@ -18,10 +18,12 @@ class Staticpage(View):
             }
         }
 
+        template = "base/main_old.html"
         if mode == "new":
+            template = "base/new_doc.html"
             self._new_doc(context)
 
-        return render(request, "base/main.html", context)
+        return render(request, template, context)
 
     def _new_doc(self, context):
         context["data"]["formset"] = DocumentForm()
