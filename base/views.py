@@ -16,4 +16,4 @@ class Staticpage(View):
             }
         }
 
-        return render(request, "base/example.html", context)
+        return render(request, "base/main.html", context)
