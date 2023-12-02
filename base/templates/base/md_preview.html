@@ -1,0 +1,61 @@
+{% extends "mainapp/base.html" %}
+{% load extra_filters %}
+{% load bleach_tags %}
+
+
+
+{% block title %}simple markdown preview{% endblock %}
+
+{% block scripts %}
+<!--<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>-->
+
+{% if ctn.enable_mathjax %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML-full"></script>
+
+<!-- source2: https://github.com/mitya57/python-markdown-math  -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  config: ["MMLorHTML.js"],
+  jax: ["input/TeX", "output/HTML-CSS", "output/NativeMML"],
+  extensions: ["MathMenu.js", "MathZoom.js"]
+});
+</script>
+{% endif %}
+{% endblock %}
+
+
+{% block header_warning %}
+<div class="headerbar-warning">
+    <div class="header">
+    <div class="fs70">
+        <details>
+            <summary>
+            <b>Warning:</b> The following content is read from a public source that can be changed by anyone with the url.
+            </summary>
+{% if ctn.plain_url_mode %}
+        Source-URL: <a href="{{ctn.src_url}}"><tt>{{ctn.src_url}}</tt></a><br>
+        Encrypted source-URL: <a href="{% url 'md_preview_oburl' src_url=ctn.src_oburl %}"><tt>{{ctn.src_oburl|slice:":50"}}...</tt></a><br>
+        (the link can be used to publish a read-only-version of a pad)
+
+        <!--utc_md_rendering_plain_url:{{ctn.src_url}}-->
+{% else %}
+        Encrypted source-URL: <a href="{% url 'md_preview_oburl' src_url=ctn.src_oburl %}"><tt>{{ctn.src_oburl|slice:":50"}}...</tt></a><br>
+        <!--utc_md_rendering_oburl:{{ctn.src_oburl}}-->
+{% endif %}
+        </details>
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="box_base box_top_content modest_links">
+
+{{ctn.sanitized_html|safe}}
+
+</div>
+
+{% endblock %}
+

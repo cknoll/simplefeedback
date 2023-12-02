@@ -1,6 +1,8 @@
 from django.views import View
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
+from django.forms import ModelForm
+from .models import Document
 
 # Create your views here.
 
@@ -16,4 +18,16 @@ class Staticpage(View):
             }
         }
 
+        if mode == "new":
+            self._new_doc(context)
+
         return render(request, "base/main.html", context)
+
+    def _new_doc(self, context):
+        context["data"]["formset"] = DocumentForm()
+
+
+class DocumentForm(ModelForm):
+    class Meta:
+        model = Document
+        fields = ["slug", "content"]
