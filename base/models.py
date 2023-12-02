@@ -10,8 +10,9 @@ class Document(models.Model):
     content = models.TextField()
 
     def save(self, *args, **kwargs):
-        self.reviewer_key = secrets.token_hex(5)
-        self.owner_key = secrets.token_hex(10)
+        # secrets.token_hex(3) -> 3 Bytes give 6 Chars
+        self.doc_key = secrets.token_hex(3)[:5]
+        self.owner_key = secrets.token_hex(5)
         super().save(*args, **kwargs)
 
 

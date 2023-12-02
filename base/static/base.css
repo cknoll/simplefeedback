@@ -103,6 +103,11 @@ body a:hover{
     padding: var(--padding-header);
 }
 
+.slug-preview {
+    background-color: var(--color-quote-background);
+
+}
+
 blockquote {
 
     background-color: var(--color-quote-background);
@@ -238,7 +243,7 @@ div.header a:hover{
   }
 
 
-body hr{
+.special_hr{
     border: 0;
     height: 1px;
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75) 40%, rgba(0, 0, 0, 0.75) 60%, rgba(0, 0, 0, 0));
