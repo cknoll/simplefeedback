@@ -15,5 +15,11 @@ j = {"re_app":"example","re_model":"mytext","re_field_name":"text","re_object_id
 
 response = requests.post('http://localhost:8000/api/add/', json=j)
 
+
+url2 = "http://localhost:8000/api/get/?re_app=example&re_model=mytext&re_field_name=text&re_object_id=&format=recogito"
+url2 = "http://localhost:8000/api/get/?re_app=example&re_model=mytext&re_field_name=text&re_object_id=&_format=recogito"
+response = requests.get(url2)
+
 print(response)
-# IPS()
+
+IPS()

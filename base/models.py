@@ -1,10 +1,24 @@
 from django.db import models
+import secrets
 
+
+
+class Document(models.Model):
+    slug = models.SlugField(max_length=500, blank=False, null=False)
+    owner_key = models.SlugField(max_length=20, blank=False, null=False)
+    doc_key = models.SlugField(max_length=20, blank=False, null=False)
+    content = models.TextField()
+
+    def save(self, *args, **kwargs):
+        self.reviewer_key = secrets.token_hex(5)
+        self.owner_key = secrets.token_hex(10)
+        super().save(*args, **kwargs)
 
 
 class Feedback(models.Model):
     author = models.CharField(max_length=250, blank=False, null=False)
     date = models.DateTimeField(auto_now_add=True)
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, null=False,)
 
 
 # taken from https://github.com/acdh-oeaw/django-recogito

@@ -4,15 +4,18 @@ from base.models import RecogitoAnnotation, Feedback
 from . import serializers
 
 
-from ipydex import IPS
+# from ipydex import IPS
 
 @api_view(["GET"])
 def get_data(request):
 
     objs = RecogitoAnnotation.objects.all()
     seralizer = serializers.RecogitoAnnotationSerializer(objs, many=True)
+    # IPS()
 
-    return Response(seralizer.data)
+    res = [d.get("re_payload") for d  in seralizer.data]
+
+    return Response(res)
 
 
 @api_view(["POST"])
@@ -43,6 +46,7 @@ def add_data(request):
         new_data.update(re_annotation)
         new_data["re_id"] = re_annotation["id"].lstrip("#")
         new_data["re_feedback"] = feedback.id
+        new_data["re_payload"] = re_annotation
         seralizer = serializers.RecogitoAnnotationSerializer(data=new_data)
         try:
             seralizer.is_valid(raise_exception=True)
