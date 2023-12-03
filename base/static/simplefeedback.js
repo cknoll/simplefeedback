@@ -18,7 +18,7 @@ console.log(url.toString());
 var rc = [];
 
 var r = Recogito.init({
-content: 'annotationcontent', // Element id or DOM node to attach to
+content: 'annotationContent', // Element id or DOM node to attach to
 locale: 'de',
 mode: 'pre',
 widgets: [

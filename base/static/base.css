@@ -15,7 +15,7 @@
     --padding-v-quote: 4px;
     --padding-h-quote: 1em;
     --padding-content: min(2.5vw, 30px);
-    --width-content: min(75vw, 60em); /*→ max width of 960px (@ vw=1280)*/
+    --width-content: min(90vw, 60em); /*→ max width of 960px (@ vw=1280)*/
 
     /*  the following scaling factor k is calculated by  16px/<min-viewport-width-in-px-at-which-still-normal-font-size> e.g. 16px/640px = 0.025 → 2.5vw    */
     --font-size-all: max(min(16px, 2.5vw), 10px);
