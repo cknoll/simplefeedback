@@ -31,6 +31,8 @@ class Staticpage(View):
         elif mode == "owner":
             self._set_doc(context, doc_key=doc_key, owner_key=owner_key)
             template = "base/doc_owner.html"
+        elif mode == "debug":
+            template = "base/main_old.html"
 
         return render(request, template, context)
 

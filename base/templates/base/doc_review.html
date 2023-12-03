@@ -1,4 +1,5 @@
 {% extends "base/base.html" %}
+{% load static %}
 
 
 {% block content %}
@@ -15,4 +16,11 @@
     <div>{{data.doc.content}}</div>
     <hr style="margin-bottom: 3em;">
 
+{% endblock %}
+
+
+{% block main_script %}
+<script type="text/javascript" src="{% static 'recogito/recogito.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+<script src="{% static 'simplefeedback.js' %}"></script>
 {% endblock %}

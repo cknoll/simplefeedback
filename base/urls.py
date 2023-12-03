@@ -10,4 +10,5 @@ urlpatterns = [
     path("new", main_view(), name="newdocumentpage", kwargs={"mode": "new"}),
     path("doc/<slug:slug>/<slug:doc_key>", main_view(), name="reviewpage", kwargs={"mode": "review"}),
     path("doc/<slug:slug>/<slug:doc_key>/o/<slug:owner_key>", main_view(), name="documentpage", kwargs={"mode": "owner"}),
+    path("debug", main_view(), name="debugpage", kwargs={"mode": "debug"}),
 ]
