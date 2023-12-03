@@ -1,0 +1,26 @@
+{% extends "base/base.html" %}
+
+
+{% block content %}
+<!--utc_doc_owner-->
+    {#debug: {{data}}#}
+    {#doc: {{data}}#}
+
+{% if data.doc.owner_mode %}
+
+    <h1 id="h1x">Owner View</h1>
+    <div>Slug: <span class="slug-preview">{{data.slug}}</span></div>
+
+    <div>Review URL: <a href="{% url 'reviewpage' data.doc.slug data.doc.doc_key %}">{% url 'reviewpage' data.doc.slug data.doc.doc_key %}</a></div>
+
+    <div>Submitted Reviews: 0</div>
+
+    <hr>
+    <div>{{data.doc.content}}</div>
+    <hr style="margin-bottom: 3em;">
+
+{% else %}
+    {# This normally should never be displayed and is a second layer of security #}
+    Wrong owner key
+{% endif %} {#end of if data.doc.owner_mode#}
+{% endblock %}

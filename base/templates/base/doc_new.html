@@ -3,27 +3,28 @@
 
 {% block content %}
     {#debug: {{data}}#}
-    {% if data.preview_doc %}
-        <!--utc_new_doc_preview-->
+    {% if data.doc %}
+        <!--utc_doc_new_preview-->
         <h1 id="h1x">Check Preview</h1>
-        <div>Slug: <span class="slug-preview">{{data.preview_doc.slug}}</span></div>
+        <div>Slug: <span class="slug-preview">{{data.doc.slug}}</span></div>
         <hr>
-        <div>{{data.preview_doc.content}}</div>
+        <div>{{data.doc.content}}</div>
         <hr style="margin-bottom: 3em;">
     {% else %}
-        <!--utc_new_doc_create-->
+        <!--utc_doc_new_create-->
         <h1 id="h1x">Gather Comments for Your Text</h1>
-    {% endif %}
+        {% endif %}
 
-    {% if data.formset %}
+        {% if data.formset %}
         <form method="post" action="">
-        {% csrf_token %}
+            {% csrf_token %}
 
-        <div><input class="form_input_fw" type="text" name="slug" maxlength="500" required id="id_slug" value="{{data.preview_doc.slug}}" placeholder="document slug" title="document slug"></div>
+            <div><input class="form_input_fw" type="text" name="slug" maxlength="500" required id="id_slug" value="{{data.preview_doc.slug}}" placeholder="document slug" title="document slug"></div>
 
-        <div><textarea class="form_input_fw" name="content" rows="10" required id="id_content" placeholder="Enter your (markdown) text here" title="document content">{{data.preview_doc.content}}</textarea></div>
+            <div><textarea class="form_input_fw" name="content" rows="10" required id="id_content" placeholder="Enter your (markdown) text here" title="document content">{{data.preview_doc.content}}</textarea></div>
 
-        {% if data.preview_doc %}
+            {% if data.doc %}
+            <!--utc_doc_new_save_button-->
             <button style="float: right; margin-left: 1em;" class="btn btn-primary" name="action" value="save" type="submit">save</button>
         {% endif %}
         <button style="float: right;" class="btn btn-primary" name="action" value="preview" type="submit">preview</button>

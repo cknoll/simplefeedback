@@ -25,11 +25,16 @@ class Staticpage(View):
         elif mode == "new_preview":
             template = "base/doc_new.html"
             self._new_doc(context, doc_pk=doc_pk, owner_key=owner_key)
+        elif mode == "review":
+            self._set_doc(context, doc_key=doc_key)
+            template = "base/doc_review.html"
+        elif mode == "owner":
+            self._set_doc(context, doc_key=doc_key, owner_key=owner_key)
+            template = "base/doc_owner.html"
 
         return render(request, template, context)
 
     def post(self, request, **kwargs):
-        print(request.POST)
         form = DocumentForm(request.POST)
         doc: Document = form.save()
         # from ipydex import IPS; IPS()
@@ -46,12 +51,27 @@ class Staticpage(View):
             context["data"]["formset"] = DocumentForm()
             return
 
-        doc = get_object_or_404(Document, pk=doc_pk)
-        if doc.owner_key != owner_key:
-            # TODO: use different exception here
-            raise KeyError("owner key does not match")
-        context["data"]["preview_doc"] = doc
+        doc = self._set_doc(context, doc_pk=doc_pk, owner_key=owner_key)
         context["data"]["formset"] = DocumentForm(instance=doc)
+
+    def _set_doc(self, context, doc_pk=None, doc_key=None, owner_key=None):
+
+        assert (doc_pk, doc_key).count(None) == 1
+
+        if doc_pk is not None:
+            doc = get_object_or_404(Document, pk=doc_pk)
+        elif doc_key is not None:
+            doc = get_object_or_404(Document, doc_key=doc_key)
+        else:
+            assert False  # cannot happen due to test above
+
+        if owner_key is not None:
+            if (doc.owner_key != owner_key):
+                # TODO: use different exception here
+                raise KeyError("owner key does not match")
+            doc.owner_mode = True
+        context["data"]["doc"] = doc
+        return doc
 
 
 class DocumentForm(ModelForm):
