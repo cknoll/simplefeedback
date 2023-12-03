@@ -9,6 +9,7 @@ from ipydex import IPS
 
 
 class TestCore1(TestCase):
+    fixtures = ["base/testdata/fixtures01.json"]
 
     def test_010_index(self):
         response = self.client.get(reverse("landingpage"))
