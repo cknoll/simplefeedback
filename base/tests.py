@@ -3,6 +3,7 @@ from django.test import TestCase
 from bs4 import BeautifulSoup
 from django.urls import reverse
 from django.conf import settings
+from base import models
 
 from ipydex import IPS
 
@@ -40,6 +41,74 @@ class TestCore1(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(response.content.count(b"utc-example-content"), 1)
+
+    def test_030_review_doc(self):
+        # slug does not matter
+        response = self.client.get(reverse("reviewpage", args=("foo", "8ada4")))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"utc_doc_review", response.content)
+
+        all_annotations = models.RecogitoAnnotation.objects.all()
+        self.assertEqual(len(all_annotations), 0)
+
+        post_data = {
+            "doc_key" : "8ada4",
+            "reviewer_name" : "rv1",
+            "re_annotation_list" : [
+                {
+                    "@context" : "http://www.w3.org/ns/anno.jsonld",
+                    "body" : [ {
+                        "purpose" : "commenting",
+                        "type" : "TextualBody",
+                        "value" : "foo"
+                        } ],
+                    "id" : "#6c132403-dff1-4705-96b9-932e4ce3150f",
+                    "target" : { "selector" : [
+                            {
+                            "exact" : "document",
+                            "type" : "TextQuoteSelector"
+                            },
+                            {
+                            "end" : 40,
+                            "start" : 32,
+                            "type" : "TextPositionSelector"
+                            }
+                        ] },
+                    "type" : "Annotation"
+                },
+                {
+                    "@context" : "http://www.w3.org/ns/anno.jsonld",
+                    "body" : [ {
+                        "purpose" : "commenting",
+                        "type" : "TextualBody",
+                        "value" : "bar"
+                        } ],
+                    "id" : "#fb3b5729-ce67-4432-a6c1-6dd142d78c89",
+                    "target" : { "selector" : [
+                            {
+                            "exact" : "document",
+                            "type" : "TextQuoteSelector"
+                            },
+                            {
+                            "end" : 208,
+                            "start" : 200,
+                            "type" : "TextPositionSelector"
+                            }
+                        ] },
+                    "type" : "Annotation"
+                }
+                ],
+            "re_app" : "simplefeedback",
+        }
+
+        api_url = reverse("api_add")
+        response = self.client.post(api_url, data=post_data, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        all_annotations = models.RecogitoAnnotation.objects.all()
+        self.assertEqual(len(all_annotations), 2)
+
+
 
 
 # auxiliary functions:

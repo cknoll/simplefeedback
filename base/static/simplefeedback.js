@@ -1,10 +1,7 @@
 // An example annotation we'll add/remove via JavaScript
 const csrftoken = Cookies.get('csrftoken');
 const target = {
-re_app: 'example',
-re_model: 'mytext',
-re_field_name: 'text',
-re_object_id: '{{ object.id }}',
+    re_app: 'simplefeedback',
 };
 
 
@@ -123,9 +120,10 @@ if (reviewerName.trim() == "") {
     return
 }
 
+var doc_key = JSON.parse(document.getElementById("doc_key").textContent);
 var merged = {
     ...target,
-    re_id: 0,
+    doc_key: doc_key,
     reviewer_name: reviewerName,
     re_annotation_list: annotationList
 }

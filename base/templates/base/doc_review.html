@@ -9,7 +9,9 @@
 {% block content %}
 <!--utc_doc_review-->
     {#debug: {{data}}#}
-    {#doc: {{data}}#}
+    doc: {{data.doc}}
+
+    {{ data.doc.doc_key|json_script:"doc_key" }}
 
     <h1 id="h1x">Review Document</h1>
     <div>Slug: <span class="slug-preview">{{data.slug}}</span></div>

@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
 
-    re_path("get/?", views.get_data),
-    re_path("add/?", views.add_data),
+    re_path("get/?", views.get_data, name="api_get"),
+    re_path("add/?", views.add_data, name="api_add"),
 
 ]
