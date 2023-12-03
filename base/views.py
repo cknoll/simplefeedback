@@ -72,6 +72,10 @@ class Staticpage(View):
                 # TODO: use different exception here
                 raise KeyError("owner key does not match")
             doc.owner_mode = True
+
+            # get reviews for this document
+            reviews = 0
+            # from ipydex import IPS; IPS()
         context["data"]["doc"] = doc
         return doc
 

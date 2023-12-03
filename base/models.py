@@ -19,7 +19,7 @@ class Document(models.Model):
 class Feedback(models.Model):
     reviewer = models.CharField(max_length=250, blank=False, null=False)
     date = models.DateTimeField(auto_now_add=True)
-    document = models.ForeignKey(Document, on_delete=models.CASCADE, null=False,)
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, null=False, related_name="feedback")
 
 
 # taken from https://github.com/acdh-oeaw/django-recogito
