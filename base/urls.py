@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from api import views as api_views
 
 
 main_view = views.Staticpage.as_view

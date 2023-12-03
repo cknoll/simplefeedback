@@ -60,7 +60,7 @@ class TestCore1(TestCase):
                     "body" : [ {
                         "purpose" : "commenting",
                         "type" : "TextualBody",
-                        "value" : "foo"
+                        "value" : "test-comment1"
                         } ],
                     "id" : "#6c132403-dff1-4705-96b9-932e4ce3150f",
                     "target" : { "selector" : [
@@ -81,7 +81,7 @@ class TestCore1(TestCase):
                     "body" : [ {
                         "purpose" : "commenting",
                         "type" : "TextualBody",
-                        "value" : "bar"
+                        "value" : "test-comment2"
                         } ],
                     "id" : "#fb3b5729-ce67-4432-a6c1-6dd142d78c89",
                     "target" : { "selector" : [
@@ -108,7 +108,16 @@ class TestCore1(TestCase):
         all_annotations = models.RecogitoAnnotation.objects.all()
         self.assertEqual(len(all_annotations), 2)
 
+        # retrieve the posted annotations from owner page
+        api_url = reverse("api_get_ok", args=("18477d7d87", ))
+        response = self.client.get(api_url)
 
+        self.assertEqual(len(response.data), 1)
+        feedback = response.data[0]
+        self.assertEqual(feedback["reviewer"], "rv1")
+        self.assertEqual(len(feedback["annotations"]), 2)
+
+        self.assertEqual(feedback["annotations"][0]["re_payload"]["body"][0]["value"], "test-comment1")
 
 
 # auxiliary functions:

@@ -8,14 +8,17 @@ from . import serializers
 # from ipydex import IPS
 
 @api_view(["GET"])
-def get_data(request):
+def get_data(request, owner_key=None):
 
-    objs = RecogitoAnnotation.objects.all()
-    seralizer = serializers.RecogitoAnnotationSerializer(objs, many=True)
-    # IPS()
+    if owner_key is None:
+        return Response([])
 
-    res = [d.get("re_payload") for d  in seralizer.data]
+    doc = get_object_or_404(Document, owner_key=owner_key)
+    feedbacks = doc.feedbacks.all()
+    serializer = serializers.FeedbackSerializer(feedbacks, many=True)
 
+    # from ipydex import IPS; IPS()
+    res = serializer.data
     return Response(res)
 
 

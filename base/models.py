@@ -19,7 +19,7 @@ class Document(models.Model):
 class Feedback(models.Model):
     reviewer = models.CharField(max_length=250, blank=False, null=False)
     date = models.DateTimeField(auto_now_add=True)
-    document = models.ForeignKey(Document, on_delete=models.CASCADE, null=False, related_name="feedback")
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, null=False, related_name="feedbacks")
 
 
 # taken from https://github.com/acdh-oeaw/django-recogito
@@ -35,7 +35,7 @@ class RecogitoAnnotation(models.Model):
     re_field_name = models.CharField(max_length=100, blank=True, null=True)
 
     # new
-    re_feedback = models.ForeignKey(Feedback, on_delete=models.CASCADE, null=False,)
+    re_feedback = models.ForeignKey(Feedback, on_delete=models.CASCADE, null=False, related_name="annotations")
 
     def __str__(self):
         return f"{self.re_text} ({self.re_id})"
