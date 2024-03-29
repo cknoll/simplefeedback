@@ -116,7 +116,7 @@ if (annotationList.length == 0) {
     return
 }
 if (reviewerName.trim() == "") {
-    alert("Invalid revier name");
+    alert("Empty or invalid reviewer name");
     return
 }
 
