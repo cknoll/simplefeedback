@@ -123,7 +123,6 @@ class TestCore1(TestCase):
         self.assertEqual(feedback["annotations"][0]["re_payload"]["body"][0]["value"], "test-comment1")
 
 
-
 class TestGUI(StaticLiveServerTestCase):
     headless = False
 
@@ -133,7 +132,6 @@ class TestGUI(StaticLiveServerTestCase):
         self.browsers = []
 
         return
-
 
     def tearDown(self):
 
@@ -162,8 +160,29 @@ class TestGUI(StaticLiveServerTestCase):
 
         b1 = self.new_browser()
         b1.visit(self.live_server_url)
-        IPS()
-        # self.assertEqual(cu.name, "testuser1")
+        self.assertEqual(len(b1.find_by_tag("textarea")), 0)
+        b1.find_by_id("click-target1").double_click()
+        b1.find_by_tag("textarea").fill("test comment1")
+
+        btn_OK = b1.find_by_tag("button")[-1]
+        self.assertEqual(btn_OK.html, "Ok")
+        btn_OK.click()
+        b1.find_by_id("reviewerName").fill("test-reviewer1")
+        btn_submit = b1.find_by_tag("button")[0]
+        self.assertEqual(btn_submit.html, "Submit")
+
+        all_annotations0 = models.RecogitoAnnotation.objects.all()
+        self.assertEqual(len(all_annotations0), 0)
+
+        btn_submit.click()
+
+        all_annotations1 = models.RecogitoAnnotation.objects.all()
+
+        # TODO: FIXME
+        # self.assertEqual(len(all_annotations1), 1)
+
+
+        # IPS()
 
 # #################################################################################################
 
