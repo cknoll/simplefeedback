@@ -1,9 +1,12 @@
 from django.test import TestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from bs4 import BeautifulSoup
 from django.urls import reverse
 from django.conf import settings
 from base import models
+
+from splinter import Browser
 
 from ipydex import IPS
 
@@ -120,7 +123,53 @@ class TestCore1(TestCase):
         self.assertEqual(feedback["annotations"][0]["re_payload"]["body"][0]["value"], "test-comment1")
 
 
+
+class TestGUI(StaticLiveServerTestCase):
+    headless = False
+
+    def setUp(self) -> None:
+        self.options_for_browser = dict(driver_name='chrome', headless=self.headless)
+
+        self.browsers = []
+
+        return
+
+
+    def tearDown(self):
+
+        # quit all browser instances (also those which where not created by setUp)
+        for browser in self.browsers:
+            browser.quit()
+
+    def get_browser_log(self, browser):
+        res = browser.driver.get_log("browser")
+        browser.logs.append(res)
+        return res
+
+    def new_browser(self):
+        """
+        create and register a new browser
+
+        :return: browser object and its index
+        """
+        browser = Browser(**self.options_for_browser)
+        browser.logs = []
+        self.browsers.append(browser)
+
+        return browser
+
+    def test_show_index_page(self):
+
+        b1 = self.new_browser()
+        b1.visit(self.live_server_url)
+        IPS()
+        # self.assertEqual(cu.name, "testuser1")
+
+# #################################################################################################
+
 # auxiliary functions:
+
+# #################################################################################################
 
 # helper functions copied from moodpoll
 def get_first_form(response):
