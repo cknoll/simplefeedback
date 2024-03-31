@@ -177,12 +177,7 @@ class TestGUI(StaticLiveServerTestCase):
         btn_submit.click()
 
         all_annotations1 = models.RecogitoAnnotation.objects.all()
-
-        # TODO: FIXME
-        # self.assertEqual(len(all_annotations1), 1)
-
-
-        # IPS()
+        self.assertEqual(len(all_annotations1), 1)
 
 # #################################################################################################
 
