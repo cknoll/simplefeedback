@@ -22,3 +22,15 @@ The goals is the following:
     - see that two reviews were uploaded,
     - display each review individually,
     - jointly display selected reviews (e.g. to see where multiple people had comments).
+
+## Notes for Local Testing
+
+### Manual Testing
+
+`python manage.py flush`
+`python manage.py loaddata base/testdata/fixtures01.json`
+
+
+### Unittests
+
+`pytest`

@@ -1,7 +1,7 @@
 [ 
   { 
     "fields" : { 
-        "content" : "This is the content of the test document.\r\nThis is the content of the test document.\r\nThis is the content of the test document.\r\nThis is the content of the test document.\r\nThis is the content of the test document.",
+        "content" : "This is the content of <span id=\"click-target1\">the test document</span>.\r\nThis is the content of the test document.\r\nThis is the content of the test document.\r\nThis is the content of the test document.\r\nThis is the content of the test document.",
         "doc_key" : "8ada4",
         "owner_key" : "18477d7d87",
         "slug" : "test-doc1"

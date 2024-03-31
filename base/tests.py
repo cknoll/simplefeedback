@@ -124,6 +124,7 @@ class TestCore1(TestCase):
 
 
 class TestGUI(StaticLiveServerTestCase):
+    fixtures = ["base/testdata/fixtures01.json"]
     headless = False
 
     def setUp(self) -> None:
@@ -159,17 +160,16 @@ class TestGUI(StaticLiveServerTestCase):
     def test_show_index_page(self):
 
         b1 = self.new_browser()
-        b1.visit(self.live_server_url)
+        url = reverse("reviewpage", kwargs={"slug": "test-doc1", "doc_key": "8ada4"})
+        b1.visit(f"{self.live_server_url}{url}")
         self.assertEqual(len(b1.find_by_tag("textarea")), 0)
         b1.find_by_id("click-target1").double_click()
         b1.find_by_tag("textarea").fill("test comment1")
-
-        btn_OK = b1.find_by_tag("button")[-1]
+        btn_OK = get_element_by_html_content(b1.find_by_tag("button"), "Ok")
         self.assertEqual(btn_OK.html, "Ok")
         btn_OK.click()
         b1.find_by_id("reviewerName").fill("test-reviewer1")
-        btn_submit = b1.find_by_tag("button")[0]
-        self.assertEqual(btn_submit.html, "Submit")
+        btn_submit = b1.find_by_id("mainSubmit")
 
         all_annotations0 = models.RecogitoAnnotation.objects.all()
         self.assertEqual(len(all_annotations0), 0)
@@ -189,6 +189,17 @@ class TestGUI(StaticLiveServerTestCase):
 # auxiliary functions:
 
 # #################################################################################################
+
+
+def get_element_by_html_content(element_list: list, content: str):
+
+    for elt in element_list:
+        if elt.html == content:
+            res_elt = elt
+            return res_elt
+
+    raise ValueError(f"Could not find element with content \"{content}\"")
+
 
 # helper functions copied from moodpoll
 def get_first_form(response):
