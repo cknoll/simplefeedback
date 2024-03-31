@@ -1,0 +1,5 @@
+django
+bleach
+django-bleach
+pytest
+pytest-django
