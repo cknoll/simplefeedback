@@ -8,6 +8,8 @@ class Document(models.Model):
     owner_key = models.SlugField(max_length=20, blank=False, null=False)
     doc_key = models.SlugField(max_length=20, blank=False, null=False)
     content = models.TextField()
+    comment_for_reviewers = models.TextField(blank=True)
+    render_markdown = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         # secrets.token_hex(3) -> 3 Bytes give 6 Chars

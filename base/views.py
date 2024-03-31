@@ -83,4 +83,4 @@ class Staticpage(View):
 class DocumentForm(ModelForm):
     class Meta:
         model = Document
-        fields = ["slug", "content"]
+        fields = ["slug", "content", "comment_for_reviewers", "render_markdown"]

@@ -1,27 +1,35 @@
 {% extends "base/base.html" %}
+{% load bleach_tags %}
+{% load extra_filters %}
 
 
 {% block content %}
-    {#debug: {{data}}#}
+    {# debug: {{data}} #}
     {% if data.doc %}
         <!--utc_doc_new_preview-->
         <h1 id="h1x">Check Preview</h1>
         <div>Slug: <span class="slug-preview">{{data.doc.slug}}</span></div>
         <hr>
-        <div>{{data.doc.content}}</div>
+        {% if data.doc.render_markdown %}
+            <div>{{data.doc.content|render_markdown|bleach}}</div>
+        {% else %}
+            <div>{{data.doc.content|bleach}}</div>
+        {% endif %}
         <hr style="margin-bottom: 3em;">
     {% else %}
         <!--utc_doc_new_create-->
-        <h1 id="h1x">Gather Comments for Your Text</h1>
-        {% endif %}
-
-        {% if data.formset %}
+        <h1 id="h1x">Create New Document</h1>
+    {% endif %}
+    {% if data.formset %}
         <form method="post" action="">
             {% csrf_token %}
 
             <div><input class="form_input_fw" type="text" name="slug" maxlength="500" required id="id_slug" value="{{data.doc.slug}}" placeholder="document slug" title="document slug"></div>
 
+            <div><textarea class="form_input_fw" name="comment_for_reviewers" rows="5" id="comment_for_reviewers" placeholder="Enter your comment for the reviewers here as markdown text here" title="comment for reviewers">{{data.doc.comment_for_reviewers}}</textarea></div>
             <div><textarea class="form_input_fw" name="content" rows="10" required id="id_content" placeholder="Enter your (markdown) text here" title="document content">{{data.doc.content}}</textarea></div>
+
+            <div><input type="checkbox" class="" id="render_markdown" name="render_markdown" {% if data.doc.render_markdown %}checked{% endif %} value="True"> Render Markdown</div>
 
             {% if data.doc %}
             <!--utc_doc_new_save_button-->
