@@ -1,3 +1,5 @@
+import time
+
 from django.test import TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
@@ -175,6 +177,9 @@ class TestGUI(StaticLiveServerTestCase):
         self.assertEqual(len(all_annotations0), 0)
 
         btn_submit.click()
+
+        # give some time for the request to be processed
+        time.sleep(0.1)
 
         all_annotations1 = models.RecogitoAnnotation.objects.all()
         self.assertEqual(len(all_annotations1), 1)

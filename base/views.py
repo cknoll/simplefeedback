@@ -28,6 +28,9 @@ class Staticpage(View):
         elif mode == "review":
             self._set_doc(context, doc_key=doc_key)
             template = "base/doc_review.html"
+        elif mode == "review_finished":
+            self._set_doc(context, doc_key=doc_key)
+            template = "base/doc_review_finished.html"
         elif mode == "owner":
             self._set_doc(context, doc_key=doc_key, owner_key=owner_key)
             template = "base/doc_owner.html"

@@ -11,14 +11,12 @@
 {% block content %}
 <!--utc_doc_review-->
     {#debug: {{data}}#}
-    doc: {{data.doc}}
+    {#doc: {{data.doc}}#}
 
     {{ data.doc.doc_key|json_script:"doc_key" }}
 
     <h1 id="h1x">Review Document</h1>
     <div>Slug: <span class="slug-preview">{{data.slug}}</span></div>
-
-    {#<div>Review URL: <a href="{% url 'reviewpage' data.doc.slug data.doc.doc_key %}">{% url 'reviewpage' data.doc.slug data.doc.doc_key %}</a></div>#}
 
     {% include "base/partial/comment_for_reviewers.html" with data=data only %}
 

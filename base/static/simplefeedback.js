@@ -100,8 +100,16 @@ console.log('updated', previous, 'with', annotation);
 });
 
 
-document.getElementById('mainSubmit').addEventListener('click', function() {
-console.log("pressed submit");
+var submit_button_active = true;
+
+document.getElementById('mainSubmit').addEventListener('click', function(event) {
+    console.log("pressed submit", submit_button_active);
+    event.preventDefault();
+    if (submit_button_active == false){
+        // TODO: handle the case that request was lost (e.g. timeout of 10s)
+        console.log("request is already processed");
+        return
+    }
 
 var annotationList = r.getAnnotations();
 var reviewerName = document.getElementById("reviewerName").value;
@@ -127,15 +135,23 @@ var merged = {
 const merged_json = JSON.stringify(merged);
 console.log(merged_json);
 
+// disable fetch button to prevent sending multiple data multiple times
+submit_button_active = false;
 // send all annotations at once
 var res = fetch('/api/add/', {
     method: 'POST', // or 'PUT'
     headers: {
-    'Content-Type': 'application/json',
-    'X-CSRFToken': csrftoken
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
     },
     body: merged_json,
+}).then(function() {
+    console.log("fetch completed");
+    window.location.href = `${window.location.href}/done`;
 });
 
+
+console.log(res);
+console.log("fetch initialized");
 
 });

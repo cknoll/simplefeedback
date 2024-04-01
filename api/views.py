@@ -9,6 +9,7 @@ from . import serializers
 
 @api_view(["GET"])
 def get_data(request, owner_key=None):
+    # print("api call get")
 
     if owner_key is None:
         return Response([])
@@ -24,6 +25,7 @@ def get_data(request, owner_key=None):
 
 @api_view(["POST"])
 def add_data(request):
+    # print("api call add")
 
     # during development: delete all existing objects
     # for w in RecogitoAnnotation.objects.all(): w.delete()
