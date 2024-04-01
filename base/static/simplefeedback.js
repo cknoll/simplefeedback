@@ -16,13 +16,9 @@ var rc = [];
 
 var r = Recogito.init({
 content: 'annotation_content', // Element id to attach to
-locale: 'de',
-mode: 'pre',
 widgets: [
     'COMMENT',
-    { widget: 'TAG', vocabulary: [ 'Place', 'Person', 'Event', 'Organization', 'Animal' ] }
 ],
-relationVocabulary: [ 'isRelated', 'isPartOf', 'isSameAs ']
 });
 
 loadAnnotations = (url) => fetch(url)

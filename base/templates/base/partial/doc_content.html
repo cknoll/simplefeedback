@@ -1,8 +1,10 @@
 {% load bleach_tags %}
 {% load extra_filters %}
 
+<div id="annotation_content">
 {% if data.doc.render_markdown %}
-<div>{{data.doc.content|render_markdown|bleach}}</div>
+{{data.doc.content|render_markdown|bleach}}
 {% else %}
-<div>{{data.doc.content|bleach}}</div>
+{{data.doc.content|bleach}}
 {% endif %}
+</div>
