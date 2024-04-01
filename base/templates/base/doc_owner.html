@@ -16,7 +16,7 @@
     <div>Submitted Reviews: 0</div>
 
     <hr>
-    <div>{{data.doc.content}}</div>
+    {% include "base/partial/doc_content.html" with data=data only %}
     <hr style="margin-bottom: 3em;">
 
 {% else %}

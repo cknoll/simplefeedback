@@ -10,11 +10,7 @@
         <h1 id="h1x">Check Preview</h1>
         <div>Slug: <span class="slug-preview">{{data.doc.slug}}</span></div>
         <hr>
-        {% if data.doc.render_markdown %}
-            <div>{{data.doc.content|render_markdown|bleach}}</div>
-        {% else %}
-            <div>{{data.doc.content|bleach}}</div>
-        {% endif %}
+        {% include "base/partial/doc_content.html" with data=data only %}
         <hr style="margin-bottom: 3em;">
     {% else %}
         <!--utc_doc_new_create-->

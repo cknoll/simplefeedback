@@ -1,0 +1,8 @@
+{% load bleach_tags %}
+{% load extra_filters %}
+
+{% if data.doc.render_markdown %}
+<div>{{data.doc.content|render_markdown|bleach}}</div>
+{% else %}
+<div>{{data.doc.content|bleach}}</div>
+{% endif %}
