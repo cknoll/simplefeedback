@@ -12,6 +12,7 @@
     <div>Slug: <span class="slug-preview">{{data.slug}}</span></div>
 
     <div>Review URL: <a href="{% url 'reviewpage' data.doc.slug data.doc.doc_key %}">{% url 'reviewpage' data.doc.slug data.doc.doc_key %}</a></div>
+    <div>Owner URL: <a href="{% url 'documentpage' data.doc.slug data.doc.doc_key data.doc.owner_key %}">{% url 'documentpage' data.doc.slug data.doc.doc_key data.doc.owner_key %}</a></div>
 
     <div>Submitted Reviews: 0</div>
 
