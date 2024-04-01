@@ -16,7 +16,9 @@
 
     <div>Submitted Reviews: 0</div>
 
-    <hr>
+    {% include "base/partial/comment_for_reviewers.html" with data=data only %}
+    <hr style="margin: 3em 0 3em 0;">
+
     {% include "base/partial/doc_content.html" with data=data only %}
     <hr style="margin-bottom: 3em;">
 
