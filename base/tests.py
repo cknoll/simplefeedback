@@ -54,7 +54,7 @@ class TestCore1(TestCase):
         self.assertIn(b"utc_doc_review", response.content)
 
         all_annotations = models.RecogitoAnnotation.objects.all()
-        self.assertEqual(len(all_annotations), 0)
+        self.assertEqual(len(all_annotations), 2)
 
         post_data = {
             "doc_key" : "8ada4",
@@ -111,18 +111,27 @@ class TestCore1(TestCase):
         self.assertEqual(response.status_code, 200)
 
         all_annotations = models.RecogitoAnnotation.objects.all()
-        self.assertEqual(len(all_annotations), 2)
+        self.assertEqual(len(all_annotations), 4)
 
         # retrieve the posted annotations from owner page
         api_url = reverse("api_get_ok", args=("18477d7d87", ))
         response = self.client.get(api_url)
 
-        self.assertEqual(len(response.data), 1)
-        feedback = response.data[0]
+        self.assertEqual(len(response.data), 2)
+        feedback = response.data[1]
         self.assertEqual(feedback["reviewer"], "rv1")
         self.assertEqual(len(feedback["annotations"]), 2)
 
         self.assertEqual(feedback["annotations"][0]["re_payload"]["body"][0]["value"], "test-comment1")
+
+    def test_040_owner_page(self):
+        url = reverse("documentpage", kwargs={"slug": "test-doc1", "doc_key": "8ada4", "owner_key": "18477d7d87"})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        bs = BeautifulSoup(response.content, 'html.parser')
+        json_element = bs.find(id="review_nbr")
+        review_nbr = json_element.contents[0]
+        self.assertEqual(review_nbr, "1")
 
 
 class TestGUI(StaticLiveServerTestCase):
@@ -159,7 +168,7 @@ class TestGUI(StaticLiveServerTestCase):
 
         return browser
 
-    def test_show_index_page(self):
+    def test_make_review(self):
 
         b1 = self.new_browser()
         url = reverse("reviewpage", kwargs={"slug": "test-doc1", "doc_key": "8ada4"})
@@ -174,7 +183,7 @@ class TestGUI(StaticLiveServerTestCase):
         btn_submit = b1.find_by_id("mainSubmit")
 
         all_annotations0 = models.RecogitoAnnotation.objects.all()
-        self.assertEqual(len(all_annotations0), 0)
+        self.assertEqual(len(all_annotations0), 2)
 
         btn_submit.click()
 
@@ -182,7 +191,7 @@ class TestGUI(StaticLiveServerTestCase):
         time.sleep(0.1)
 
         all_annotations1 = models.RecogitoAnnotation.objects.all()
-        self.assertEqual(len(all_annotations1), 1)
+        self.assertEqual(len(all_annotations1), 3)
 
 # #################################################################################################
 

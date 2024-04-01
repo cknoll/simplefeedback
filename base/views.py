@@ -77,8 +77,7 @@ class Staticpage(View):
             doc.owner_mode = True
 
             # get reviews for this document
-            reviews = 0
-            # from ipydex import IPS; IPS()
+            doc.review_nbr = len(doc.feedbacks.all())
         context["data"]["doc"] = doc
         return doc
 

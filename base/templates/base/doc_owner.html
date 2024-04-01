@@ -14,7 +14,10 @@
     <div>Review URL: <a href="{% url 'reviewpage' data.doc.slug data.doc.doc_key %}">{% url 'reviewpage' data.doc.slug data.doc.doc_key %}</a></div>
     <div>Owner URL: <a href="{% url 'documentpage' data.doc.slug data.doc.doc_key data.doc.owner_key %}">{% url 'documentpage' data.doc.slug data.doc.doc_key data.doc.owner_key %}</a></div>
 
-    <div>Submitted Reviews: 0</div>
+    <div>Submitted Reviews: {{data.doc.review_nbr}}</div>
+
+    {{ data.doc.review_nbr|json_script:"review_nbr" }}
+
 
     {% include "base/partial/comment_for_reviewers.html" with data=data only %}
     <hr style="margin: 3em 0 3em 0;">
