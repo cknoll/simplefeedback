@@ -36,3 +36,19 @@ The goals is the following:
 ### Unittests
 
 `pytest`
+
+
+
+### Current Challenges
+
+Visualizing annotations:
+
+
+Idea: two columns; left panel: main text, right panel: current annotation.
+
+left panel: all annotated text-sections (ATS) are highlighted in soft yellow. Sections which are covered by multiple annotations have stronger highlight, clicking on an ATS activates it; active ATS:
+is highlighted stronger and displayed in the right panel.
+
+
+
+right panel: shows metadata (top, small) and comment, offers possibility to copy comment

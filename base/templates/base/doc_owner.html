@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 
+{% block main_class %}main main_two_column{% endblock %}
 
 {% block content %}
 <!--utc_doc_owner-->
@@ -7,6 +8,9 @@
     {#doc: {{data}}#}
 
 {% if data.doc.owner_mode %}
+<div class="two_col_container">
+<div class="left-column">
+
 
     <h1 id="h1x">Owner View</h1>
     <div>Slug: <span class="slug-preview">{{data.slug}}</span></div>
@@ -25,6 +29,17 @@
     {% include "base/partial/doc_content.html" with data=data only %}
     <hr style="margin-bottom: 3em;">
 
+</div> <!-- end of left column -->
+<div class="right-column">
+
+<h2>Review Details</h2>
+
+...
+
+</div> <!-- end of right column -->
+
+
+</div><!-- end of two column container -->
 {% else %}
     {# This normally should never be displayed and is a second layer of security #}
     Wrong owner key
