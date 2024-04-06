@@ -5,6 +5,11 @@ const RENDER_BATCH_SIZE = 100; // Number of annotations to render in one frame
 
 const uniqueItems = items => Array.from(new Set(items))
 
+// Helper function: determine if a str only contains newline chars
+function containsOnlyNewlines(str) {
+  return /^(\n)+$/.test(str);
+}
+
 class Highlighter {
 
   constructor(element, formatter) {
@@ -49,11 +54,17 @@ class Highlighter {
   _addAnnotation = annotation => {
     try {
       const [ domStart, domEnd ] = this.charOffsetsToDOMPosition([ annotation.start, annotation.end ]);
-      //console.log(domStart, domEnd)
+
 
       const range = document.createRange();
       range.setStart(domStart.node, domStart.offset);
       range.setEnd(domEnd.node, domEnd.offset);
+
+      // debug code (for line-break-node-problem)
+      // console.log("domStart", domStart, "domEnd", domEnd)
+      // this.domStart = domStart;
+      // this.domEnd = domEnd;
+      // this.range = range;
 
       const spans = this.wrapRange(range);
       spans.forEach(span => span.className = `annotation-hl`.trim());
@@ -194,6 +205,10 @@ class Highlighter {
     var runningOffset = 0;
     let n = ni.nextNode();
     while (n != null) {
+      if (containsOnlyNewlines(n.textContent)){
+        n = ni.nextNode();
+        continue;
+      }
       runningOffset += n.textContent.length;
       nodes.push(n);
       if (runningOffset > stopOffset) {
@@ -217,6 +232,11 @@ class Highlighter {
         return nodeProps;
       });
     })();
+
+    // debug code (for line-break-node-problem
+    // this.textNodeProps = textNodeProps;
+    // console.log("maxOffset", maxOffset, "charOffsets", charOffsets)
+    // console.log("textNodeProps", textNodeProps);
 
     return this.calculateDomPositionWithin(textNodeProps, charOffsets);
   }

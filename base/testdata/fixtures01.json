@@ -101,5 +101,201 @@
       },
     "model" : "base.recogitoannotation",
     "pk" : "9a286ee6-49a1-48b2-9448-cfd5cc938cb7"
+  },
+  {
+    "fields" : {
+        "comment_for_reviewers" : "Please review. This would be **nice**.",
+        "content" : "This document contains\r\n\r\n- Markdown\r\n- which **can be** seen\r\n- due to the fact\r\n\r\nthat it is formatted.",
+        "doc_key" : "4225a",
+        "owner_key" : "f8164504fd",
+        "render_markdown" : true,
+        "slug" : "test-doc3"
+      },
+    "model" : "base.document",
+    "pk" : 3
+  },
+  {
+    "fields" : {
+        "date" : "2024-04-06T14:16:24.173Z",
+        "document" : 3,
+        "reviewer" : "rv3"
+      },
+    "model" : "base.feedback",
+    "pk" : 2
+  },
+  {
+    "fields" : {
+        "re_app" : "simplefeedback",
+        "re_end" : 13,
+        "re_feedback" : 2,
+        "re_field_name" : null,
+        "re_model" : null,
+        "re_object_id" : null,
+        "re_payload" : {
+            "@context" : "http://www.w3.org/ns/anno.jsonld",
+            "body" : [ {
+                  "purpose" : "commenting",
+                  "type" : "TextualBody",
+                  "value" : "c1"
+                } ],
+            "id" : "#10c8b3d1-8b0d-4de4-8c0e-016b545038e1",
+            "target" : { "selector" : [
+                    {
+                      "exact" : "document",
+                      "type" : "TextQuoteSelector"
+                    },
+                    {
+                      "end" : 13,
+                      "start" : 5,
+                      "type" : "TextPositionSelector"
+                    }
+                  ] },
+            "type" : "Annotation"
+          },
+        "re_start" : 5,
+        "re_text" : "document"
+      },
+    "model" : "base.recogitoannotation",
+    "pk" : "10c8b3d1-8b0d-4de4-8c0e-016b545038e1"
+  },
+  {
+    "fields" : {
+        "re_app" : "simplefeedback",
+        "re_end" : 30,
+        "re_feedback" : 2,
+        "re_field_name" : null,
+        "re_model" : null,
+        "re_object_id" : null,
+        "re_payload" : {
+            "@context" : "http://www.w3.org/ns/anno.jsonld",
+            "body" : [ {
+                  "purpose" : "commenting",
+                  "type" : "TextualBody",
+                  "value" : "c2 (spans to first item)"
+                } ],
+            "id" : "#b0f3d20b-b829-4c61-829b-7448f4ec8990",
+            "target" : { "selector" : [
+                    {
+                      "exact" : "containsMarkdown",
+                      "type" : "TextQuoteSelector"
+                    },
+                    {
+                      "end" : 30,
+                      "start" : 14,
+                      "type" : "TextPositionSelector"
+                    }
+                  ] },
+            "type" : "Annotation"
+          },
+        "re_start" : 14,
+        "re_text" : "containsMarkdown"
+      },
+    "model" : "base.recogitoannotation",
+    "pk" : "b0f3d20b-b829-4c61-829b-7448f4ec8990"
+  },
+  {
+    "fields" : {
+        "re_app" : "simplefeedback",
+        "re_end" : 62,
+        "re_feedback" : 2,
+        "re_field_name" : null,
+        "re_model" : null,
+        "re_object_id" : null,
+        "re_payload" : {
+            "@context" : "http://www.w3.org/ns/anno.jsonld",
+            "body" : [ {
+                  "purpose" : "commenting",
+                  "type" : "TextualBody",
+                  "value" : "c3 (fact)"
+                } ],
+            "id" : "#7c386aff-9f2b-4325-837a-351b5f18d236",
+            "target" : { "selector" : [
+                    {
+                      "exact" : "fact",
+                      "type" : "TextQuoteSelector"
+                    },
+                    {
+                      "end" : 62,
+                      "start" : 58,
+                      "type" : "TextPositionSelector"
+                    }
+                  ] },
+            "type" : "Annotation"
+          },
+        "re_start" : 58,
+        "re_text" : "fact"
+      },
+    "model" : "base.recogitoannotation",
+    "pk" : "7c386aff-9f2b-4325-837a-351b5f18d236"
+  },
+  {
+    "fields" : {
+        "re_app" : "simplefeedback",
+        "re_end" : 72,
+        "re_feedback" : 2,
+        "re_field_name" : null,
+        "re_model" : null,
+        "re_object_id" : null,
+        "re_payload" : {
+            "@context" : "http://www.w3.org/ns/anno.jsonld",
+            "body" : [ {
+                  "purpose" : "commenting",
+                  "type" : "TextualBody",
+                  "value" : "c4 (is)"
+                } ],
+            "id" : "#dfbf3d1a-633c-401e-8238-bcb57f891554",
+            "target" : { "selector" : [
+                    {
+                      "exact" : "is",
+                      "type" : "TextQuoteSelector"
+                    },
+                    {
+                      "end" : 72,
+                      "start" : 70,
+                      "type" : "TextPositionSelector"
+                    }
+                  ] },
+            "type" : "Annotation"
+          },
+        "re_start" : 70,
+        "re_text" : "is"
+      },
+    "model" : "base.recogitoannotation",
+    "pk" : "dfbf3d1a-633c-401e-8238-bcb57f891554"
+  },
+  {
+    "fields" : {
+        "re_app" : "simplefeedback",
+        "re_end" : 83,
+        "re_feedback" : 2,
+        "re_field_name" : null,
+        "re_model" : null,
+        "re_object_id" : null,
+        "re_payload" : {
+            "@context" : "http://www.w3.org/ns/anno.jsonld",
+            "body" : [ {
+                  "purpose" : "commenting",
+                  "type" : "TextualBody",
+                  "value" : "c5 (that it is formatted.)"
+                } ],
+            "id" : "#a62ec9dd-0f85-4c29-a9ba-f827ab4d8dac",
+            "target" : { "selector" : [
+                    {
+                      "exact" : "that it is formatted.",
+                      "type" : "TextQuoteSelector"
+                    },
+                    {
+                      "end" : 83,
+                      "start" : 62,
+                      "type" : "TextPositionSelector"
+                    }
+                  ] },
+            "type" : "Annotation"
+          },
+        "re_start" : 62,
+        "re_text" : "that it is formatted."
+      },
+    "model" : "base.recogitoannotation",
+    "pk" : "a62ec9dd-0f85-4c29-a9ba-f827ab4d8dac"
   }
 ]
