@@ -1,6 +1,12 @@
 // import Highlighter from './Highlighter.js';
 const csrftoken = Cookies.get('csrftoken');
 
+const doc_key = JSON.parse(document.getElementById("doc_key").textContent);
+const owner_key = JSON.parse(document.getElementById("owner_key").textContent);
+
+const baseUrl = window.location.origin;
+const fetchUrl = new URL(`/api/get/o/${owner_key}`, baseUrl)
+
 
 var sac = document.getElementById("show_annotations_content");
 var hl = new Highlighter(sac, null);
@@ -24,7 +30,7 @@ var ann =  {
 
 // do some asynchronous work (use `await a`)
 const a = (async () => {
-    const fixedAnnotations = (await fetch("http://localhost:8000/api/get").then((response) => response.json()));
+    const fixedAnnotations = (await fetch(fetchUrl).then((response) => response.json()));
 
     //hl.addOrUpdateAnnotation(fixedAnnotation);
     // hl.init([ann]);
