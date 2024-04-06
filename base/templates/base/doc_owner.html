@@ -13,7 +13,7 @@
 <div class="left-column">
 
 
-    <h1 id="h1x">Owner View</h1>
+    <h2 id="h1x">Owner View</h2>
     <div>Slug: <span class="slug-preview">{{data.slug}}</span></div>
 
     <div>Review URL: <a href="{% url 'reviewpage' data.doc.slug data.doc.doc_key %}">{% url 'reviewpage' data.doc.slug data.doc.doc_key %}</a></div>
@@ -52,5 +52,6 @@
 <script type="text/javascript" src="{% static 'recogito/recogito.min.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
 <!-- <script src="{% static 'simplefeedback.js' %}"></script> -->
+<script src="{% static 'Highlighter.js' %}"></script>
 <script src="{% static 'showfeedback.js' %}"></script>
 {% endblock %}
