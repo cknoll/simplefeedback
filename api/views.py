@@ -2,25 +2,35 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from base.models import RecogitoAnnotation, Feedback, Document
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 from . import serializers
 
 
-# from ipydex import IPS
+from ipydex import IPS
 
 @api_view(["GET"])
 def get_data(request, owner_key=None):
     # print("api call get")
 
+    print(request)
     if owner_key is None:
-        return Response([])
+        owner_key = "18477d7d87"
+        # return Response([])
 
     doc = get_object_or_404(Document, owner_key=owner_key)
     feedbacks = doc.feedbacks.all()
-    serializer = serializers.FeedbackSerializer(feedbacks, many=True)
+    for fb in feedbacks:
+        annotations = [ann.re_payload for ann in fb.annotations.all()]
+        break
+    return JsonResponse(annotations, safe=False)
+    # serializer = serializers.FeedbackSerializer(feedbacks, many=True)
 
-    # from ipydex import IPS; IPS()
-    res = serializer.data
-    return Response(res)
+    # res = serializer.data
+    # response = Response(res)
+    # w = {"re_app":"simplefeedback","re_id":"95937184-078a-49c0-8037-d8495b593674","re_payload":{"@context":"http://www.w3.org/ns/anno.jsonld","type":"Annotation","body":[{"type":"TextualBody","value":"comment1 like model","purpose":"commenting"}],"target":{"selector":[{"type":"TextQuoteSelector","exact":"document"},{"type":"TextPositionSelector","start":32,"end":40}]},"id":"#95937184-078a-49c0-8037-d8495b593674"}}
+    # response.data = w
+    # # from ipydex import IPS; IPS()
+    # return response
 
 
 @api_view(["POST"])

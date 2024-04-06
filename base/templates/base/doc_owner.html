@@ -1,4 +1,5 @@
 {% extends "base/base.html" %}
+{% load static %}
 
 {% block main_class %}main main_two_column{% endblock %}
 
@@ -26,7 +27,7 @@
     {% include "base/partial/comment_for_reviewers.html" with data=data only %}
     <hr style="margin: 3em 0 3em 0;">
 
-    {% include "base/partial/doc_content.html" with data=data only %}
+    {% include "base/partial/doc_content.html" with data=data class="show_annotations_content" only %}
     <hr style="margin-bottom: 3em;">
 
 </div> <!-- end of left column -->
@@ -44,4 +45,12 @@
     {# This normally should never be displayed and is a second layer of security #}
     Wrong owner key
 {% endif %} {#end of if data.doc.owner_mode#}
+{% endblock %}
+
+
+{% block main_script %}
+<script type="text/javascript" src="{% static 'recogito/recogito.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+<!-- <script src="{% static 'simplefeedback.js' %}"></script> -->
+<script src="{% static 'showfeedback.js' %}"></script>
 {% endblock %}

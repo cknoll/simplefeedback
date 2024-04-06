@@ -38,12 +38,12 @@ loadAnnotations = (url) => fetch(url)
 //r.loadAnnotations(fetchUrl);
 
 
-var ann = {"@context":"http://www.w3.org/ns/anno.jsonld","type":"Annotation","body":[{"type":"TextualBody","value":"foo","purpose":"commenting"}],"target":{"selector":[{"type":"TextQuoteSelector","exact":"commodo"},{"type":"TextPositionSelector","start":230,"end":237}]},"id":"#888ddfb9-a391-42c6-8dc1-9f569c4526dc"};
+// var ann = {"@context":"http://www.w3.org/ns/anno.jsonld","type":"Annotation","body":[{"type":"TextualBody","value":"foo","purpose":"commenting"}],"target":{"selector":[{"type":"TextQuoteSelector","exact":"commodo"},{"type":"TextPositionSelector","start":230,"end":237}]},"id":"#888ddfb9-a391-42c6-8dc1-9f569c4526dc"};
+var ann =  {"@context":"http://www.w3.org/ns/anno.jsonld","type":"Annotation","body":[{"type":"TextualBody","value":"comment1 like model","purpose":"commenting"}],"target":{"selector":[{"type":"TextQuoteSelector","exact":"document"},{"type":"TextPositionSelector","start":32,"end":40}]},"id":"#95937184-078a-49c0-8037-d8495b593674"};
 
+var ac = document.getElementById("annotation_content");
 
-r.setAnnotations([
-
-]);
+r.setAnnotations([]);
 
 
 // r.on('selectAnnotation', function(a) {
@@ -101,57 +101,81 @@ console.log('updated', previous, 'with', annotation);
 
 
 var submit_button_active = true;
+var main_submit_button = document.getElementById('mainSubmit');
 
-document.getElementById('mainSubmit').addEventListener('click', function(event) {
-    console.log("pressed submit", submit_button_active);
-    event.preventDefault();
-    if (submit_button_active == false){
-        // TODO: handle the case that request was lost (e.g. timeout of 10s)
-        console.log("request is already processed");
+if (main_submit_button) {
+
+    main_submit_button.addEventListener('click', function(event) {
+        console.log("pressed submit", submit_button_active);
+        event.preventDefault();
+        if (submit_button_active == false){
+            // TODO: handle the case that request was lost (e.g. timeout of 10s)
+            console.log("request is already processed");
+            return
+        }
+
+    var annotationList = r.getAnnotations();
+    var reviewerName = document.getElementById("reviewerName").value;
+
+    // TODO: submit button should only be enabled if name is valid and annotation list is non-empty
+    if (annotationList.length == 0) {
+        alert("No annotations to submit");
+        return
+    }
+    if (reviewerName.trim() == "") {
+        alert("Empty or invalid reviewer name");
         return
     }
 
-var annotationList = r.getAnnotations();
-var reviewerName = document.getElementById("reviewerName").value;
+    var doc_key = JSON.parse(document.getElementById("doc_key").textContent);
+    var merged = {
+        ...target,
+        doc_key: doc_key,
+        reviewer_name: reviewerName,
+        re_annotation_list: annotationList
+    }
 
-// TODO: submit button should only be enabled if name is valid and annotation list is non-empty
-if (annotationList.length == 0) {
-    alert("No annotations to submit");
-    return
+    const merged_json = JSON.stringify(merged);
+    console.log(merged_json);
+
+    // disable fetch button to prevent sending multiple data multiple times
+    submit_button_active = false;
+    // send all annotations at once
+    var res = fetch('/api/add/', {
+        method: 'POST', // or 'PUT'
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: merged_json,
+    }).then(function() {
+        console.log("fetch completed");
+        window.location.href = `${window.location.href}/done`;
+    });
+
+
+    console.log(res);
+    console.log("fetch initialized");
+
+    });
+
 }
-if (reviewerName.trim() == "") {
-    alert("Empty or invalid reviewer name");
-    return
-}
-
-var doc_key = JSON.parse(document.getElementById("doc_key").textContent);
-var merged = {
-    ...target,
-    doc_key: doc_key,
-    reviewer_name: reviewerName,
-    re_annotation_list: annotationList
-}
-
-const merged_json = JSON.stringify(merged);
-console.log(merged_json);
-
-// disable fetch button to prevent sending multiple data multiple times
-submit_button_active = false;
-// send all annotations at once
-var res = fetch('/api/add/', {
-    method: 'POST', // or 'PUT'
-    headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrftoken
-    },
-    body: merged_json,
-}).then(function() {
-    console.log("fetch completed");
-    window.location.href = `${window.location.href}/done`;
-});
 
 
-console.log(res);
-console.log("fetch initialized");
+// only for test
+addAnnotation = annotation => {
+    try {
+      const [ domStart, domEnd ] = this.charOffsetsToDOMPosition([ annotation.start, annotation.end ]);
 
-});
+      const range = document.createRange();
+      range.setStart(domStart.node, domStart.offset);
+      range.setEnd(domEnd.node, domEnd.offset);
+
+    //   this.applyStyles(annotation, spans);
+    //   this.bindAnnotation(annotation, spans);
+    } catch (error) {
+      console.warn('Could not render annotation')
+      console.warn(error);
+      console.warn(annotation.underlying);
+    }
+  }
