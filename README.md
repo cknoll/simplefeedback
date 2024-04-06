@@ -28,9 +28,10 @@ The goals is the following:
 ### Manual Testing
 
 
-`python manage.py migrate --run-syncdb`
-`python manage.py flush`
-`python manage.py loaddata base/testdata/fixtures01.json`
+- `python manage.py migrate --run-syncdb`
+- `python manage.py flush`
+- `python manage.py loaddata base/testdata/fixtures01.json`
+- `rm db.sqlite3; python manage.py migrate --run-syncdb; python manage.py loaddata base/testdata/fixtures01.json`
 
 
 ### Unittests

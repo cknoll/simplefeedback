@@ -42,6 +42,20 @@ class RecogitoAnnotation(models.Model):
     def __str__(self):
         return f"{self.re_text} ({self.re_id})"
 
+    def get_expected_structure(self):
+        """
+        The JS API expects a specific data structure (schema) which is different from what it provides
+        when the data is sent. This method transforms the data into that expected structure.
+        """
+
+        res = {
+            "start": self.re_start,
+            "end": self.re_end,
+            "text": self.re_text, # target text
+            "comment_value": self.re_payload["body"][0]["value"],
+        }
+        return res
+
     def save(self, *args, **kwargs):
         if self.re_payload:
             data = self.re_payload

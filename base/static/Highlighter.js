@@ -16,7 +16,12 @@ class Highlighter {
     const startTime = performance.now();
 
     // Discard all annotations without a TextPositionSelector
-    const highlights = annotations.filter(a => a.selector('TextPositionSelector'));
+    //const highlights = annotations.filter(a => a.selector('TextPositionSelector'));
+
+    // own try (obsolete):
+    //sel = q.target.selector.filter(a => a.type == 'TextPositionSelector')
+
+    const highlights = annotations;
 
     // Sorting bottom to top significantly speeds things up,
     // because walkTextNodes will have a lot less to walk

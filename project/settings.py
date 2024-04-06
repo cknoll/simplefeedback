@@ -133,7 +133,11 @@ BLEACH_ALLOWED_TAGS = [
 BLEACH_STRIP_COMMENTS = False
 
 
-bleach.ALLOWED_ATTRIBUTES.update({
-    "*": ["id"],
+BLEACH_ALLOWED_ATTRIBUTES = {
+    "*": ["id", "style"],
     "img": ["src"],
-})
+}
+
+BLEACH_ALLOWED_STYLES = [
+    'font-family', 'font-weight', 'text-decoration', 'font-variant'
+]
