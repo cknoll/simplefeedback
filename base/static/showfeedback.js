@@ -31,7 +31,7 @@ var ann =  {
 
 // do some asynchronous work (use `await a`)
 const a = (async () => {
-    const fixedAnnotations = (await fetch(fetchFeedbacksUrl).then((response) => response.json()));
+    const fixedAnnotations = (await fetch(fetchAnnotationsUrl).then((response) => response.json()));
 
     //hl.addOrUpdateAnnotation(fixedAnnotation);
     // hl.init([ann]);

@@ -204,6 +204,20 @@ class TestGUI(StaticLiveServerTestCase):
         all_annotations1 = models.RecogitoAnnotation.objects.all()
         self.assertEqual(len(all_annotations1), NUMBER_OF_FIXTURE_ANNOTATIONS + 1)
 
+
+    def test_display_annotations_on_owner_page(self):
+        b1 = self.new_browser()
+        url = reverse("documentpage", kwargs={"slug": "test-doc3", "doc_key": "4225a", "owner_key": "f8164504fd"})
+        b1.visit(f"{self.live_server_url}{url}")
+        sac = b1.find_by_id("show_annotations_content")
+        span_list = sac.find_by_tag("span")
+        hl_span_list = [elt.html for elt in span_list if elt.has_class("annotation-hl") and elt.html not in ["", "\n"]]
+        expected = [
+            "document", "contains", "Markdown", "fact", "that it ", '<span class="annotation-hl">is</span>', "is", " formatted."
+        ]
+        self.assertEqual(hl_span_list, expected)
+
+
 # #################################################################################################
 
 # auxiliary functions:
