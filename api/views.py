@@ -11,15 +11,16 @@ from ipydex import IPS
 @api_view(["GET"])
 def get_data(request, owner_key=None):
 
-    annotations = []
+    fb_list = []
     if owner_key is not None:
         doc = get_object_or_404(Document, owner_key=owner_key)
         feedbacks = doc.feedbacks.all()
+
         for fb in feedbacks:
             # annotations = [ann.re_payload for ann in fb.annotations.all()]
-            annotations = [ann.get_expected_structure() for ann in fb.annotations.all()]
-            break
-    return JsonResponse(annotations, safe=False)
+            # fb.annotation_list = [ann.get_expected_structure() for ann in fb.annotations.all()]
+            fb_list.append(fb.serialize())
+    return JsonResponse(fb_list, safe=False)
     # serializer = serializers.FeedbackSerializer(feedbacks, many=True)
 
     # res = serializer.data

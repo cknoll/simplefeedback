@@ -1,7 +1,8 @@
 from django.db import models
 import secrets
 
-
+# for the sake of reduced complexity we implement our own serialize methods here
+# this should be professionallized in the future
 
 class Document(models.Model):
     slug = models.SlugField(max_length=500, blank=False, null=False)
@@ -17,11 +18,37 @@ class Document(models.Model):
         self.owner_key = secrets.token_hex(5)
         super().save(*args, **kwargs)
 
+    def serialize(self):
+        res = {
+            "slug": self.slug,
+            "owner_key": self.owner_key,
+            "doc_key": self.doc_key,
+            "content": self.content,
+            "comment_for_reviewers": self.comment_for_reviewers,
+            "render_markdown": self.render_markdown,
+        }
+        return res
+
 
 class Feedback(models.Model):
     reviewer = models.CharField(max_length=250, blank=False, null=False)
     date = models.DateTimeField(auto_now_add=True)
     document = models.ForeignKey(Document, on_delete=models.CASCADE, null=False, related_name="feedbacks")
+
+    def serialize(self):
+        """
+        return the object as as serializable dict
+        """
+        res = {
+            "reviewer": self.reviewer,
+            "date": self.date,
+            "document": self.document.serialize(),
+
+            # access related manager (reverse of foreign key relation below)
+            "annotation_list":[ann.serialize() for ann in self.annotations.all()]
+
+        }
+        return res
 
 
 # taken from https://github.com/acdh-oeaw/django-recogito
@@ -42,12 +69,11 @@ class RecogitoAnnotation(models.Model):
     def __str__(self):
         return f"{self.re_text} ({self.re_id})"
 
-    def get_expected_structure(self):
+    def serialize(self):
         """
         The JS API expects a specific data structure (schema) which is different from what it provides
         when the data is sent. This method transforms the data into that expected structure.
         """
-
         res = {
             "start": self.re_start,
             "end": self.re_end,

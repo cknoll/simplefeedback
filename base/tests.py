@@ -1,4 +1,5 @@
 import time
+import json
 
 from django.test import TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -12,6 +13,9 @@ from splinter import Browser
 
 from ipydex import IPS
 
+
+# this number might need to change if the fixtures change
+NUMBER_OF_FIXTURE_ANNOTATIONS = 7
 
 
 class TestCore1(TestCase):
@@ -54,7 +58,7 @@ class TestCore1(TestCase):
         self.assertIn(b"utc_doc_review", response.content)
 
         all_annotations = models.RecogitoAnnotation.objects.all()
-        self.assertEqual(len(all_annotations), 2)
+        self.assertEqual(len(all_annotations), NUMBER_OF_FIXTURE_ANNOTATIONS)
 
         post_data = {
             "doc_key" : "8ada4",
@@ -111,18 +115,19 @@ class TestCore1(TestCase):
         self.assertEqual(response.status_code, 200)
 
         all_annotations = models.RecogitoAnnotation.objects.all()
-        self.assertEqual(len(all_annotations), 4)
+        self.assertEqual(len(all_annotations), NUMBER_OF_FIXTURE_ANNOTATIONS + 2)
 
         # retrieve the posted annotations from owner page
         api_url = reverse("api_get_ok", args=("18477d7d87", ))
         response = self.client.get(api_url)
 
-        self.assertEqual(len(response.data), 2)
-        feedback = response.data[1]
-        self.assertEqual(feedback["reviewer"], "rv1")
-        self.assertEqual(len(feedback["annotations"]), 2)
+        feedbacks = json.loads(response.content)
+        self.assertEqual(len(feedbacks), 2)
+        feedback1 = feedbacks[1]
+        self.assertEqual(feedback1["reviewer"], "rv1")
+        self.assertEqual(len(feedback1["annotation_list"]), 2)
 
-        self.assertEqual(feedback["annotations"][0]["re_payload"]["body"][0]["value"], "test-comment1")
+        self.assertEqual(feedback1["annotation_list"][0]["comment_value"], "test-comment1")
 
     def test_040_owner_page(self):
         url = reverse("documentpage", kwargs={"slug": "test-doc1", "doc_key": "8ada4", "owner_key": "18477d7d87"})
@@ -183,7 +188,7 @@ class TestGUI(StaticLiveServerTestCase):
         btn_submit = b1.find_by_id("mainSubmit")
 
         all_annotations0 = models.RecogitoAnnotation.objects.all()
-        self.assertEqual(len(all_annotations0), 2)
+        self.assertEqual(len(all_annotations0), NUMBER_OF_FIXTURE_ANNOTATIONS)
 
         btn_submit.click()
 
@@ -191,7 +196,7 @@ class TestGUI(StaticLiveServerTestCase):
         time.sleep(0.1)
 
         all_annotations1 = models.RecogitoAnnotation.objects.all()
-        self.assertEqual(len(all_annotations1), 3)
+        self.assertEqual(len(all_annotations1), NUMBER_OF_FIXTURE_ANNOTATIONS + 1)
 
 # #################################################################################################
 
