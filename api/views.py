@@ -9,9 +9,10 @@ from . import serializers
 from ipydex import IPS
 
 @api_view(["GET"])
-def get_data(request, owner_key=None):
+def get_data(request, owner_key=None, mode=None):
 
     fb_list = []
+    ann_list = []
     if owner_key is not None:
         doc = get_object_or_404(Document, owner_key=owner_key)
         feedbacks = doc.feedbacks.all()
@@ -19,8 +20,19 @@ def get_data(request, owner_key=None):
         for fb in feedbacks:
             # annotations = [ann.re_payload for ann in fb.annotations.all()]
             # fb.annotation_list = [ann.get_expected_structure() for ann in fb.annotations.all()]
-            fb_list.append(fb.serialize())
-    return JsonResponse(fb_list, safe=False)
+            fb_ser = fb.serialize()
+            fb_list.append(fb_ser)
+            ann_list.extend(fb_ser["annotation_list"])
+
+    if mode == "fb":
+        return JsonResponse(fb_list, safe=False)
+    elif mode == "ann":
+        return JsonResponse(ann_list, safe=False)
+    else:
+        msg = f"unexpected mode: {mode}"
+        raise ValueError(msg)
+
+
     # serializer = serializers.FeedbackSerializer(feedbacks, many=True)
 
     # res = serializer.data

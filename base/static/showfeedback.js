@@ -5,7 +5,8 @@ const doc_key = JSON.parse(document.getElementById("doc_key").textContent);
 const owner_key = JSON.parse(document.getElementById("owner_key").textContent);
 
 const baseUrl = window.location.origin;
-const fetchUrl = new URL(`/api/get/o/${owner_key}`, baseUrl)
+const fetchFeedbacksUrl = new URL(`/api/get/fb/${owner_key}`, baseUrl)
+const fetchAnnotationsUrl = new URL(`/api/get/ann/${owner_key}`, baseUrl)
 
 
 var sac = document.getElementById("show_annotations_content");
@@ -30,7 +31,7 @@ var ann =  {
 
 // do some asynchronous work (use `await a`)
 const a = (async () => {
-    const fixedAnnotations = (await fetch(fetchUrl).then((response) => response.json()));
+    const fixedAnnotations = (await fetch(fetchFeedbacksUrl).then((response) => response.json()));
 
     //hl.addOrUpdateAnnotation(fixedAnnotation);
     // hl.init([ann]);

@@ -118,16 +118,22 @@ class TestCore1(TestCase):
         self.assertEqual(len(all_annotations), NUMBER_OF_FIXTURE_ANNOTATIONS + 2)
 
         # retrieve the posted annotations from owner page
-        api_url = reverse("api_get_ok", args=("18477d7d87", ))
+        api_url = reverse("api_get_fb", args=("18477d7d87", ))
         response = self.client.get(api_url)
 
         feedbacks = json.loads(response.content)
+        self.assertEqual(set([a["_type"] for a in feedbacks]), {str(models.Feedback)})
         self.assertEqual(len(feedbacks), 2)
         feedback1 = feedbacks[1]
         self.assertEqual(feedback1["reviewer"], "rv1")
         self.assertEqual(len(feedback1["annotation_list"]), 2)
 
         self.assertEqual(feedback1["annotation_list"][0]["comment_value"], "test-comment1")
+
+        api_url = reverse("api_get_ann", args=("18477d7d87", ))
+        response = self.client.get(api_url)
+        annotations = json.loads(response.content)
+        self.assertEqual(set([a["_type"] for a in annotations]), {str(models.RecogitoAnnotation)})
 
     def test_040_owner_page(self):
         url = reverse("documentpage", kwargs={"slug": "test-doc1", "doc_key": "8ada4", "owner_key": "18477d7d87"})

@@ -20,6 +20,8 @@ class Document(models.Model):
 
     def serialize(self):
         res = {
+            "pk": self.pk,
+            "_type": str(type(self)),
             "slug": self.slug,
             "owner_key": self.owner_key,
             "doc_key": self.doc_key,
@@ -35,19 +37,21 @@ class Feedback(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     document = models.ForeignKey(Document, on_delete=models.CASCADE, null=False, related_name="feedbacks")
 
-    def serialize(self):
+    def serialize(self, ann_list=True):
         """
         return the object as as serializable dict
         """
         res = {
+            "pk": self.pk,
+            "_type": str(type(self)),
             "reviewer": self.reviewer,
             "date": self.date,
             "document": self.document.serialize(),
-
-            # access related manager (reverse of foreign key relation below)
-            "annotation_list":[ann.serialize() for ann in self.annotations.all()]
-
         }
+        if ann_list:
+            # access related manager (reverse of foreign key relation below)
+            res["annotation_list"] = [ann.serialize() for ann in self.annotations.all()]
+
         return res
 
 
@@ -75,10 +79,14 @@ class RecogitoAnnotation(models.Model):
         when the data is sent. This method transforms the data into that expected structure.
         """
         res = {
+            "pk": self.pk,
+            "_type": str(type(self)),
             "start": self.re_start,
             "end": self.re_end,
             "text": self.re_text, # target text
             "comment_value": self.re_payload["body"][0]["value"],
+            # save a reference to the feedback but without annotation list (prevent inifinite reference circle)
+            "feedback": self.re_feedback.serialize(ann_list=False)
         }
         return res
 
