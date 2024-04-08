@@ -29,14 +29,38 @@ var ann =  {
     "end":27
 };
 
-// do some asynchronous work (use `await a`)
+
+// prepare detail display in right colum
+const reviewDetailMetaDiv = document.getElementById('review-detail-meta');
+const reviewDetailContentDiv = document.getElementById('review-detail-content');
+
+function annClickHandler(span) {
+  const handler = (() => {
+    // Get the content of the clicked span element
+    const spanContent = span.textContent;
+    reviewDetailContentDiv.textContent = spanContent;
+  });
+  return handler;
+};
+
+
+// function to create the event listeners (must be called after the annotations are loaded)
+function connectAnnotationSpans(){
+    const relevantSpans = document.querySelectorAll('.annotation-hl');
+    // Attach a click event listener to each span element
+    relevantSpans.forEach(span => {
+      span.addEventListener('click', annClickHandler(span))
+    });
+};
+
+
+// do some asynchronous work
 const a = (async () => {
     const fixedAnnotations = (await fetch(fetchAnnotationsUrl).then((response) => response.json()));
 
-    //hl.addOrUpdateAnnotation(fixedAnnotation);
-    // hl.init([ann]);
-    hl.init(fixedAnnotations);
-  })()
+    await hl.init(fixedAnnotations);
+    connectAnnotationSpans();
+  })();
 
 
 // useful snippets for debugging
