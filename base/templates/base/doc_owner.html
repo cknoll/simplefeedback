@@ -11,34 +11,41 @@
     {{ data.doc.owner_key|json_script:"owner_key" }}
 
 {% if data.doc.owner_mode %}
+
+{{ data.doc.review_nbr|json_script:"review_nbr" }}
+
 <div class="two_col_container">
 <div class="left-column">
 
 
-    <h2 id="h1x">Owner View</h2>
-    <div>Slug: <span class="slug-preview">{{data.doc.slug}}</span></div>
+    <h2 id="h1x">Owner View ({{data.doc.slug}})</h2>
+    <details>
+        <summary>
+            Review URL: <a href="{% url 'reviewpage' data.doc.slug data.doc.doc_key %}">{% url 'reviewpage' data.doc.slug data.doc.doc_key %}</a>
+        </summary>
 
-    <div>Review URL: <a href="{% url 'reviewpage' data.doc.slug data.doc.doc_key %}">{% url 'reviewpage' data.doc.slug data.doc.doc_key %}</a></div>
-    <div>Owner URL: <a href="{% url 'documentpage' data.doc.slug data.doc.doc_key data.doc.owner_key %}">{% url 'documentpage' data.doc.slug data.doc.doc_key data.doc.owner_key %}</a></div>
+        <div>Owner URL: <a href="{% url 'documentpage' data.doc.slug data.doc.doc_key data.doc.owner_key %}">{% url 'documentpage' data.doc.slug data.doc.doc_key data.doc.owner_key %}</a></div>
 
-    <div>Submitted Reviews: {{data.doc.review_nbr}}</div>
+        <div>Slug: <span class="slug-preview">{{data.doc.slug}}</span></div>
+        <div>Submitted Reviews: {{data.doc.review_nbr}}</div>
 
-    {{ data.doc.review_nbr|json_script:"review_nbr" }}
+            {% include "base/partial/comment_for_reviewers.html" with data=data only %}
+        </details>
 
-
-    {% include "base/partial/comment_for_reviewers.html" with data=data only %}
-    <hr style="margin: 3em 0 3em 0;">
-
+    <hr style="margin: 1em 0 3em 0;">
     {% include "base/partial/doc_content.html" with data=data class="show_annotations_content" only %}
     <hr style="margin-bottom: 3em;">
 
 </div> <!-- end of left column -->
 <div class="right-column">
 
-<h2>Review Details</h2>
+    <h2>Review Details</h2>
 
-    <div id="review-detail-meta"></div>
-    <div id="review-detail-content"></div>
+    Meta data: <span id="review-detail-meta"></span>
+
+    <br>
+    <br>
+    Content: <div id="review-detail-content"></div>
 
 </div> <!-- end of right column -->
 

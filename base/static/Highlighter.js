@@ -55,7 +55,6 @@ class Highlighter {
     try {
       const [ domStart, domEnd ] = this.charOffsetsToDOMPosition([ annotation.start, annotation.end ]);
 
-
       const range = document.createRange();
       range.setStart(domStart.node, domStart.offset);
       range.setEnd(domEnd.node, domEnd.offset);
@@ -67,7 +66,10 @@ class Highlighter {
       // this.range = range;
 
       const spans = this.wrapRange(range);
-      spans.forEach(span => span.className = `annotation-hl`.trim());
+      spans.forEach(span => {
+        span.className = `annotation-hl`.trim();
+        span.id = annotation.pk;
+      });
     // this.applyStyles(annotation, spans);
     // this.bindAnnotation(annotation, spans);
     } catch (error) {

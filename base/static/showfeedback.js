@@ -11,23 +11,27 @@ const fetchAnnotationsUrl = new URL(`/api/get/ann/${owner_key}`, baseUrl)
 
 var sac = document.getElementById("show_annotations_content");
 var hl = new Highlighter(sac, null);
-var ann =  {
-    "@context":"http://www.w3.org/ns/anno.jsonld",
-    "type":"Annotation",
-    "body":[
-        {"type":"TextualBody","value":"comment1 like model","purpose":"commenting"}
-    ],
-    "target":
-    {
-        "selector":[
-            {"type":"TextQuoteSelector","exact":"document"},
-            {"type":"TextPositionSelector","start":32,"end":40}
-        ]
-    },
-    "id":"#95937184-078a-49c0-8037-d8495b593674",
-    "start":2,
-    "end":27
-};
+
+// this object was for debugging
+// var ann =  {
+//     "@context":"http://www.w3.org/ns/anno.jsonld",
+//     "type":"Annotation",
+//     "body":[
+//         {"type":"TextualBody","value":"comment1 like model","purpose":"commenting"}
+//     ],
+//     "target":
+//     {
+//         "selector":[
+//             {"type":"TextQuoteSelector","exact":"document"},
+//             {"type":"TextPositionSelector","start":32,"end":40}
+//         ]
+//     },
+//     "id":"#95937184-078a-49c0-8037-d8495b593674",
+//     "start":2,
+//     "end":27
+// };
+
+var annotationArray = {};
 
 
 // prepare detail display in right colum
@@ -38,7 +42,9 @@ function annClickHandler(span) {
   const handler = (() => {
     // Get the content of the clicked span element
     const spanContent = span.textContent;
-    reviewDetailContentDiv.textContent = spanContent;
+    const ann = annotationArray[span.id]
+    reviewDetailMetaDiv.textContent = `Reviewer: ${ann.feedback.reviewer}, ${ann.feedback.date}`;
+    reviewDetailContentDiv.textContent = `${ann.comment_value}`;
   });
   return handler;
 };
@@ -50,6 +56,7 @@ function connectAnnotationSpans(){
     // Attach a click event listener to each span element
     relevantSpans.forEach(span => {
       span.addEventListener('click', annClickHandler(span))
+      span.addEventListener('mouseover', annClickHandler(span))
     });
 };
 
@@ -60,6 +67,9 @@ const a = (async () => {
 
     await hl.init(fixedAnnotations);
     connectAnnotationSpans();
+
+    //make annotations easily available
+    fixedAnnotations.forEach(ann => annotationArray[ann.pk] = ann);
   })();
 
 

@@ -45,7 +45,7 @@ class Feedback(models.Model):
             "pk": self.pk,
             "_type": str(type(self)),
             "reviewer": self.reviewer,
-            "date": self.date,
+            "date": self.date.strftime('%Y-%m-%d %H:%M:%S'),
             "document": self.document.serialize(),
         }
         if ann_list:
