@@ -21,38 +21,26 @@
 
 </head>
 <body>
+
+<div class="headerbar">
+    <div class="header">
+        <a href="{% url 'landingpage'%}" style="text-decoration: none;">
+            <div id="header1" class="box-frame">
+<div class="boxed">s</div> <div class="boxed">i</div> <div class="boxed">m</div> <div class="boxed">p</div> <div class="boxed">l</div> <div class="boxed">e</div> <div class="boxed">f</div> <div class="boxed">e</div> <div class="boxed">e</div> <div class="boxed">d</div> <div class="boxed">b</div> <div class="boxed">a</div> <div class="boxed">c</div> <div class="boxed">k</div>             </div>
+        </a>
+            <div id="header2">
+                – gather comments for your text
+            </div>
+    </div> <!-- end of header -->
+{% block header_warning %}
+{% endblock %}
+</div> <!-- end of headerbar -->
+
 <div id="outer-container">
 
 {# `utc` means "unit test comment". This is a simple mechanism to be able to test if the desired content actually was delivered #}
 <!--utc_landing_page-->
 
-    <div class="headerbar">
-        <div class="header">
-            <a href="{% url 'landingpage'%}" style="text-decoration: none;">
-                <div id="header1" class="box-frame">
-                    <div class="boxed">s</div>
-                    <div class="boxed">i</div>
-                    <div class="boxed">m</div>
-                    <div class="boxed">p</div>
-                    <div class="boxed">l</div>
-                    <div class="boxed">e</div>
-                    <div class="boxed">f</div>
-                    <div class="boxed">e</div>
-                    <div class="boxed">e</div>
-                    <div class="boxed">d</div>
-                    <div class="boxed">b</div>
-                    <div class="boxed">a</div>
-                    <div class="boxed">c</div>
-                    <div class="boxed">k</div>
-                </div>
-            </a>
-                <div id="header2">
-                    – gather comments for your text
-                </div>
-        </div> <!-- end of header -->
-    {% block header_warning %}
-    {% endblock %}
-    </div> <!-- end of headerbar -->
 
 
 <div id="id_main" class="{% block main_class %}main{% endblock %}">
