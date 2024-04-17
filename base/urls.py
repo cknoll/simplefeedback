@@ -4,7 +4,7 @@ from . import views
 from api import views as api_views
 
 
-main_view = views.Staticpage.as_view
+main_view = views.SimpleFeedbackMainView.as_view
 
 urlpatterns = [
     path("", main_view(), name="landingpage"),

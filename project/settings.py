@@ -16,6 +16,9 @@ import bleach
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# TODO: set this from config
+BASE_URL = "http://localhost:8000"
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -136,6 +139,7 @@ BLEACH_STRIP_COMMENTS = False
 BLEACH_ALLOWED_ATTRIBUTES = {
     "*": ["id", "style"],
     "img": ["src"],
+    "a": ["href"],
 }
 
 BLEACH_ALLOWED_STYLES = [
