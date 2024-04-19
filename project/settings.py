@@ -24,7 +24,7 @@ else:
     DEVMODE = env_devmode.lower() == "true"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.as_posix()
 
 
 cfg = du.get_nearest_config("config.toml", devmode=DEVMODE)
@@ -41,6 +41,16 @@ BASE_URL = cfg("BASE_URL")
 
 
 ALLOWED_HOSTS = cfg("ALLOWED_HOSTS")
+
+
+# Collect static files here (will be copied to correct location by deployment script)
+STATIC_ROOT = cfg("STATIC_ROOT").replace("__BASEDIR__", BASE_DIR)
+
+# Collect media files here (unclear whether we need this, copied from codequiz)
+MEDIA_ROOT = cfg("MEDIA_ROOT").replace("__BASEDIR__", BASE_DIR)
+
+# not yet used
+BACKUP_PATH = os.path.abspath(cfg("BACKUP_PATH").replace("__BASEDIR__", BASE_DIR))
 
 
 # Application definition
@@ -94,7 +104,7 @@ WSGI_APPLICATION = "project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": Path(BASE_DIR) / cfg("DB_FILE_NAME"),
     }
 }
 

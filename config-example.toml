@@ -25,7 +25,7 @@ user = 'some_user'
 app_name = "simplefeedback"
 PROJECT_NAME = 'simplefeedback1'
 url_path = "/%(app_name)s"
-port = "8000"
+port = '8000'
 
 ALLOWED_HOSTS = ["%(app_name)s.%(user)s.uber.space", "%(app_name)s.kddk.eu"]
 ALLOWED_HOSTS__DEVMODE = ["localhost"]
@@ -34,6 +34,22 @@ BASE_URL = "//%(app_name)s.%(user)s.uber.space/"
 BASE_URL__DEVMODE = "//localhost:%(port)s"
 
 deployment_path = "/home/%(user)s/%(PROJECT_NAME)s-deployment/%(app_name)s"
+
+
+# needed to set the correct web backend; expexted to start with `/`
+django_url_prefix = "/"
+static_url_prefix = "/static"
+
+# working directories during deployment
+# `__BASEDIR__` will be replaced inside settings
+STATIC_ROOT = "__BASEDIR__/collected_static"
+MEDIA_ROOT = "__BASEDIR__/media"
+
+
+# this path sould be located outside <BASEDIR> because the deployment might delete that completely
+BACKUP_PATH = "__BASEDIR__/../%(PROJECT_NAME)s_db_backups"
+
+DB_FILE_NAME = "db.sqlite3"
 
 # name (not path)
 venv = "%(PROJECT_NAME)s-venv"
@@ -48,3 +64,5 @@ DEBUG__DEVMODE = true
 
 # secret keys can be created with: python3 -c "import secrets; print(secrets.token_urlsafe(50))"
 SECRET_KEY = 'NfdysN_yXKWuliPb--example--W5_Fc9VUDOVnPgUBJ2oeq6FjAOJykFWFpK1PL7URw'
+
+ADMIN_PASS = "aQqn6Kg7gE--example-secret--Nv3QDGrG5FrShQ7Jg"
