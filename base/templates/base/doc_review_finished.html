@@ -1,0 +1,18 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% load extra_filters %}
+{% load bleach_tags %}
+
+
+
+{% block content %}
+<!--utc_doc_review-->
+    {#debug: {{data}}#}
+    {#doc: {{data.doc}}#}
+
+    {{ data.doc.doc_key|json_script:"doc_key" }}
+
+    <h1 id="h1x">Review Finished Successfully</h1>
+    <div>Thank you.</div>
+
+{% endblock %}

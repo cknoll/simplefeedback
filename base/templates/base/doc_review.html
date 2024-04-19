@@ -1,5 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
+{% load extra_filters %}
+{% load bleach_tags %}
 
 {% block head_extension %}
 <link href="{% static 'recogito/recogito.min.css' %}" rel="stylesheet">
@@ -9,23 +11,23 @@
 {% block content %}
 <!--utc_doc_review-->
     {#debug: {{data}}#}
-    doc: {{data.doc}}
+    {#doc: {{data.doc}}#}
 
     {{ data.doc.doc_key|json_script:"doc_key" }}
 
     <h1 id="h1x">Review Document</h1>
     <div>Slug: <span class="slug-preview">{{data.slug}}</span></div>
 
-    {#<div>Review URL: <a href="{% url 'reviewpage' data.doc.slug data.doc.doc_key %}">{% url 'reviewpage' data.doc.slug data.doc.doc_key %}</a></div>#}
+    {% include "base/partial/comment_for_reviewers.html" with data=data only %}
 
-    <hr>
+    <hr style="margin: 3em 0 3em 0;">
+
     <form id="reviewForm">
         <div><input class="form_input_fw" type="text" name="reviewer" maxlength="500" required id="reviewerName" placeholder="reviewer name" title="reviewer name"></div>
         <hr>
-        <div id="annotation_content">{{data.doc.content}}</div>
-        {#<div><textarea class="form_input_fw" name="content" rows="10" required id="id_content" placeholder="Enter your (markdown) text here" title="document content">{{data.preview_doc.content}}</textarea></div>#}
+        {% include "base/partial/doc_content.html" with data=data only %}
 
-        <button id="mainSubmit" style="float: right; margin-left: 1em;" class="btn btn-primary"type="submit">submit feedback</button>
+        <button id="mainSubmit" style="float: right; margin-left: 1em;" class="btn btn-primary" type="submit">submit feedback</button>
 
     </form>
     <hr style="margin: 3em 0 3em 0;">

@@ -1,12 +1,21 @@
+import time
+import json
+
 from django.test import TestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 from bs4 import BeautifulSoup
 from django.urls import reverse
 from django.conf import settings
 from base import models
 
+from splinter import Browser
+
 from ipydex import IPS
 
+
+# this number might need to change if the fixtures change
+NUMBER_OF_FIXTURE_ANNOTATIONS = 7
 
 
 class TestCore1(TestCase):
@@ -49,7 +58,7 @@ class TestCore1(TestCase):
         self.assertIn(b"utc_doc_review", response.content)
 
         all_annotations = models.RecogitoAnnotation.objects.all()
-        self.assertEqual(len(all_annotations), 0)
+        self.assertEqual(len(all_annotations), NUMBER_OF_FIXTURE_ANNOTATIONS)
 
         post_data = {
             "doc_key" : "8ada4",
@@ -106,21 +115,127 @@ class TestCore1(TestCase):
         self.assertEqual(response.status_code, 200)
 
         all_annotations = models.RecogitoAnnotation.objects.all()
-        self.assertEqual(len(all_annotations), 2)
+        self.assertEqual(len(all_annotations), NUMBER_OF_FIXTURE_ANNOTATIONS + 2)
 
         # retrieve the posted annotations from owner page
-        api_url = reverse("api_get_ok", args=("18477d7d87", ))
+        api_url = reverse("api_get_fb", args=("18477d7d87", ))
         response = self.client.get(api_url)
 
-        self.assertEqual(len(response.data), 1)
-        feedback = response.data[0]
-        self.assertEqual(feedback["reviewer"], "rv1")
-        self.assertEqual(len(feedback["annotations"]), 2)
+        feedbacks = json.loads(response.content)
+        self.assertEqual(set([a["_type"] for a in feedbacks]), {str(models.Feedback)})
+        self.assertEqual(len(feedbacks), 2)
+        feedback1 = feedbacks[1]
+        self.assertEqual(feedback1["reviewer"], "rv1")
+        self.assertEqual(len(feedback1["annotation_list"]), 2)
 
-        self.assertEqual(feedback["annotations"][0]["re_payload"]["body"][0]["value"], "test-comment1")
+        self.assertEqual(feedback1["annotation_list"][0]["comment_value"], "test-comment1")
 
+        api_url = reverse("api_get_ann", args=("18477d7d87", ))
+        response = self.client.get(api_url)
+        annotations = json.loads(response.content)
+        self.assertEqual(set([a["_type"] for a in annotations]), {str(models.RecogitoAnnotation)})
+
+    def test_040_owner_page(self):
+        url = reverse("documentpage", kwargs={"slug": "test-doc1", "doc_key": "8ada4", "owner_key": "18477d7d87"})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        bs = BeautifulSoup(response.content, 'html.parser')
+        json_element = bs.find(id="review_nbr")
+        review_nbr = json_element.contents[0]
+        self.assertEqual(review_nbr, "1")
+
+
+class TestGUI(StaticLiveServerTestCase):
+    fixtures = ["base/testdata/fixtures01.json"]
+    headless = False
+
+    def setUp(self) -> None:
+        self.options_for_browser = dict(driver_name='chrome', headless=self.headless)
+
+        self.browsers = []
+
+        return
+
+    def tearDown(self):
+
+        # quit all browser instances (also those which where not created by setUp)
+        for browser in self.browsers:
+            browser.quit()
+
+    def get_browser_log(self, browser):
+        res = browser.driver.get_log("browser")
+        browser.logs.append(res)
+        return res
+
+    def new_browser(self):
+        """
+        create and register a new browser
+
+        :return: browser object and its index
+        """
+        browser = Browser(**self.options_for_browser)
+        browser.logs = []
+        self.browsers.append(browser)
+
+        return browser
+
+    def test_make_review(self):
+
+        b1 = self.new_browser()
+        url = reverse("reviewpage", kwargs={"slug": "test-doc1", "doc_key": "8ada4"})
+        b1.visit(f"{self.live_server_url}{url}")
+        self.assertEqual(len(b1.find_by_tag("textarea")), 0)
+        b1.find_by_id("click-target1").double_click()
+        b1.find_by_tag("textarea").fill("test comment1")
+        btn_OK = get_element_by_html_content(b1.find_by_tag("button"), "Ok")
+        self.assertEqual(btn_OK.html, "Ok")
+        btn_OK.click()
+        b1.find_by_id("reviewerName").fill("test-reviewer1")
+        btn_submit = b1.find_by_id("mainSubmit")
+
+        all_annotations0 = models.RecogitoAnnotation.objects.all()
+        self.assertEqual(len(all_annotations0), NUMBER_OF_FIXTURE_ANNOTATIONS)
+
+        btn_submit.click()
+
+        # give some time for the request to be processed
+        time.sleep(0.1)
+
+        all_annotations1 = models.RecogitoAnnotation.objects.all()
+        self.assertEqual(len(all_annotations1), NUMBER_OF_FIXTURE_ANNOTATIONS + 1)
+
+
+    def test_display_annotations_on_owner_page(self):
+        b1 = self.new_browser()
+        url = reverse("documentpage", kwargs={"slug": "test-doc3", "doc_key": "4225a", "owner_key": "f8164504fd"})
+        b1.visit(f"{self.live_server_url}{url}")
+        sac = b1.find_by_id("show_annotations_content")
+        span_list = sac.find_by_tag("span")
+        hl_span_list = [elt.html for elt in span_list if elt.has_class("annotation-hl") and elt.html not in ["", "\n"]]
+
+        tmp1 = '<span class="annotation-hl" id="a62ec9dd-0f85-4c29-a9ba-f827ab4d8dac">is</span>'
+        expected = [
+            "document", "contains", "Markdown", "fact", "that it ", tmp1, "is", " formatted."
+        ]
+        self.assertEqual(hl_span_list, expected)
+
+
+# #################################################################################################
 
 # auxiliary functions:
+
+# #################################################################################################
+
+
+def get_element_by_html_content(element_list: list, content: str):
+
+    for elt in element_list:
+        if elt.html == content:
+            res_elt = elt
+            return res_elt
+
+    raise ValueError(f"Could not find element with content \"{content}\"")
+
 
 # helper functions copied from moodpoll
 def get_first_form(response):

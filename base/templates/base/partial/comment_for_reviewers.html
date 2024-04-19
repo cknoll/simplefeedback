@@ -1,0 +1,9 @@
+{% load bleach_tags %}
+{% load extra_filters %}
+
+<!-- utc_comment_for_reviewers -->
+
+{% if data.doc.comment_for_reviewers %}
+<h2>Comment for reviewers:</h2>
+    <div>{{data.doc.comment_for_reviewers|render_markdown|bleach}}</div>
+{% endif %}

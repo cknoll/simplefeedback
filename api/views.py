@@ -2,28 +2,50 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from base.models import RecogitoAnnotation, Feedback, Document
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 from . import serializers
 
 
-# from ipydex import IPS
+from ipydex import IPS
 
 @api_view(["GET"])
-def get_data(request, owner_key=None):
+def get_data(request, owner_key=None, mode=None):
 
-    if owner_key is None:
-        return Response([])
+    fb_list = []
+    ann_list = []
+    if owner_key is not None:
+        doc = get_object_or_404(Document, owner_key=owner_key)
+        feedbacks = doc.feedbacks.all()
 
-    doc = get_object_or_404(Document, owner_key=owner_key)
-    feedbacks = doc.feedbacks.all()
-    serializer = serializers.FeedbackSerializer(feedbacks, many=True)
+        for fb in feedbacks:
+            # annotations = [ann.re_payload for ann in fb.annotations.all()]
+            # fb.annotation_list = [ann.get_expected_structure() for ann in fb.annotations.all()]
+            fb_ser = fb.serialize()
+            fb_list.append(fb_ser)
+            ann_list.extend(fb_ser["annotation_list"])
 
-    # from ipydex import IPS; IPS()
-    res = serializer.data
-    return Response(res)
+    if mode == "fb":
+        return JsonResponse(fb_list, safe=False)
+    elif mode == "ann":
+        return JsonResponse(ann_list, safe=False)
+    else:
+        msg = f"unexpected mode: {mode}"
+        raise ValueError(msg)
+
+
+    # serializer = serializers.FeedbackSerializer(feedbacks, many=True)
+
+    # res = serializer.data
+    # response = Response(res)
+    # w = {"re_app":"simplefeedback","re_id":"95937184-078a-49c0-8037-d8495b593674","re_payload":{"@context":"http://www.w3.org/ns/anno.jsonld","type":"Annotation","body":[{"type":"TextualBody","value":"comment1 like model","purpose":"commenting"}],"target":{"selector":[{"type":"TextQuoteSelector","exact":"document"},{"type":"TextPositionSelector","start":32,"end":40}]},"id":"#95937184-078a-49c0-8037-d8495b593674"}}
+    # response.data = w
+    # # from ipydex import IPS; IPS()
+    # return response
 
 
 @api_view(["POST"])
 def add_data(request):
+    # print("api call add")
 
     # during development: delete all existing objects
     # for w in RecogitoAnnotation.objects.all(): w.delete()

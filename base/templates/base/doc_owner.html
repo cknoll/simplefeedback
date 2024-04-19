@@ -1,26 +1,67 @@
 {% extends "base/base.html" %}
+{% load static %}
 
+{% block main_class %}main main_two_column{% endblock %}
 
 {% block content %}
 <!--utc_doc_owner-->
     {#debug: {{data}}#}
     {#doc: {{data}}#}
+    {{ data.doc.doc_key|json_script:"doc_key" }}
+    {{ data.doc.owner_key|json_script:"owner_key" }}
 
 {% if data.doc.owner_mode %}
 
-    <h1 id="h1x">Owner View</h1>
-    <div>Slug: <span class="slug-preview">{{data.slug}}</span></div>
+{{ data.doc.review_nbr|json_script:"review_nbr" }}
 
-    <div>Review URL: <a href="{% url 'reviewpage' data.doc.slug data.doc.doc_key %}">{% url 'reviewpage' data.doc.slug data.doc.doc_key %}</a></div>
+<div class="two_col_container">
+<div class="left-column">
 
-    <div>Submitted Reviews: 0</div>
 
-    <hr>
-    <div>{{data.doc.content}}</div>
+    <h2 id="h1x">Owner View ({{data.doc.slug}})</h2>
+    <details>
+        <summary>
+            Review URL: <a href="{% url 'reviewpage' data.doc.slug data.doc.doc_key %}">{% url 'reviewpage' data.doc.slug data.doc.doc_key %}</a>
+        </summary>
+
+        <div>Owner URL: <a href="{% url 'documentpage' data.doc.slug data.doc.doc_key data.doc.owner_key %}">{% url 'documentpage' data.doc.slug data.doc.doc_key data.doc.owner_key %}</a></div>
+
+        <div>Slug: <span class="slug-preview">{{data.doc.slug}}</span></div>
+        <div>Submitted Reviews: {{data.doc.review_nbr}}</div>
+
+            {% include "base/partial/comment_for_reviewers.html" with data=data only %}
+        </details>
+
+    <hr style="margin: 1em 0 3em 0;">
+    {% include "base/partial/doc_content.html" with data=data class="show_annotations_content" only %}
     <hr style="margin-bottom: 3em;">
 
+</div> <!-- end of left column -->
+<div class="right-column">
+
+    <h2>Review Details</h2>
+
+    Meta data: <span id="review-detail-meta"></span>
+
+    <br>
+    <br>
+    Content: <div id="review-detail-content"></div>
+
+</div> <!-- end of right column -->
+
+
+</div><!-- end of two column container -->
 {% else %}
     {# This normally should never be displayed and is a second layer of security #}
     Wrong owner key
 {% endif %} {#end of if data.doc.owner_mode#}
+{% endblock %}
+
+
+{% block main_script %}
+<script type="text/javascript" src="{% static 'recogito/recogito.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+<!-- <script src="{% static 'simplefeedback.js' %}"></script> -->
+<script src="{% static 'Highlighter.js' %}"></script>
+<script src="{% static 'showfeedback.js' %}"></script>
 {% endblock %}

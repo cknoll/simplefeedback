@@ -3,10 +3,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.forms import ModelForm
 from .models import Document
+from .simple_pages_interface import get_sp
 
 # Create your views here.
 
-class Staticpage(View):
+class SimpleFeedbackMainView(View):
     def get(self, request, slug=None, doc_key=None, owner_key=None, mode=None, doc_pk=None):
         context = {
             # having a nested dict for easier debugging in the template
@@ -15,10 +16,10 @@ class Staticpage(View):
                 "doc_key": doc_key,
                 "owner_key": owner_key,
                 "mode": mode,
+                "sp": None
             }
         }
 
-        template = "base/main_old.html"
         if mode == "new":
             template = "base/doc_new.html"
             self._new_doc(context)
@@ -28,11 +29,17 @@ class Staticpage(View):
         elif mode == "review":
             self._set_doc(context, doc_key=doc_key)
             template = "base/doc_review.html"
+        elif mode == "review_finished":
+            self._set_doc(context, doc_key=doc_key)
+            template = "base/doc_review_finished.html"
         elif mode == "owner":
             self._set_doc(context, doc_key=doc_key, owner_key=owner_key)
             template = "base/doc_owner.html"
         elif mode == "debug":
             template = "base/main_old.html"
+        else:
+            context["data"]["sp"] = get_sp("landing")
+            template = "base/main_simplepage.html"
 
         return render(request, template, context)
 
@@ -74,8 +81,7 @@ class Staticpage(View):
             doc.owner_mode = True
 
             # get reviews for this document
-            reviews = 0
-            # from ipydex import IPS; IPS()
+            doc.review_nbr = len(doc.feedbacks.all())
         context["data"]["doc"] = doc
         return doc
 
@@ -83,4 +89,4 @@ class Staticpage(View):
 class DocumentForm(ModelForm):
     class Meta:
         model = Document
-        fields = ["slug", "content"]
+        fields = ["slug", "content", "comment_for_reviewers", "render_markdown"]

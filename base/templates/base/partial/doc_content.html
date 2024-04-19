@@ -1,0 +1,10 @@
+{% load bleach_tags %}
+{% load extra_filters %}
+
+<div id="{% if class %}{{class}}{% else %}annotation_content{% endif %}">
+{% if data.doc.render_markdown %}
+{{data.doc.content|render_markdown|bleach}}
+{% else %}
+{{data.doc.content|bleach}}
+{% endif %}
+</div>
