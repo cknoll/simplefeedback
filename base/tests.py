@@ -212,8 +212,10 @@ class TestGUI(StaticLiveServerTestCase):
         sac = b1.find_by_id("show_annotations_content")
         span_list = sac.find_by_tag("span")
         hl_span_list = [elt.html for elt in span_list if elt.has_class("annotation-hl") and elt.html not in ["", "\n"]]
+
+        tmp1 = '<span class="annotation-hl" id="a62ec9dd-0f85-4c29-a9ba-f827ab4d8dac">is</span>'
         expected = [
-            "document", "contains", "Markdown", "fact", "that it ", '<span class="annotation-hl">is</span>', "is", " formatted."
+            "document", "contains", "Markdown", "fact", "that it ", tmp1, "is", " formatted."
         ]
         self.assertEqual(hl_span_list, expected)
 
