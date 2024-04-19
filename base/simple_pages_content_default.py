@@ -221,14 +221,15 @@ new_sp(type="landing",
        content=_(f"""
 # Simplefeedback
 
-This is a web application to collect comments on a text from various reviewers.
+Simplefeedback is an experimental web application to collect comments on a text from various reviewers.
 
 Steps:
 
-- Submit your text (e.g. as markdown source code).
-- Share the review-url with your community and bookmark the owner-url.
-- Each reviewer can create their own review (collection of comments to the text) without being spoiled by the comments of others.
-- Read all submitted reviews via the owner url.
+- Submit your text (e. g. as markdown source code). You will get two URLs as response:
+       - The review-URL which you can share in public or with your community.
+       - The owner-URL from which you can access all reviews.
+- Each reviewer can create their own seperate review (collection of annotations to the text) without being spoiled by the comments of others.
+- As owner of a document you can view all submitted reviews at once.
 
 Try it out: [{settings.BASE_URL}/new]({settings.BASE_URL}/new)
 """))
