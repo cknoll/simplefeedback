@@ -6,7 +6,7 @@ The goals is the following:
 
 ## Idea Description
 
-- The user (A) can upload a text in markdown.
+- The user (A) can submit a text in markdown.
 - The user (A) receives 2 URLS:
     - easyfeedback.net/\<text-slug>-\<ownertoken>
     - easyfeedback.net/\<text-slug>-\<reviewtoken>

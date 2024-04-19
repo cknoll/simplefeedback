@@ -231,7 +231,7 @@ Steps:
 - Each reviewer can create their own seperate review (collection of annotations to the text) without being spoiled by the comments of others.
 - As owner of a document you can view all submitted reviews at once.
 
-Try it out: [{settings.BASE_URL}/new]({settings.BASE_URL}/new)
+Try it out: [{settings.BASE_URL.rstrip("/")}/new]({settings.BASE_URL.rstrip("/")}/new)
 """))
 
 # --

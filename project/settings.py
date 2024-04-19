@@ -10,26 +10,37 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import sys
+import os
 from pathlib import Path
-import bleach
+import deploymentutils as du
+
+
+# export DJANGO_DEVMODE=True; py3 manage.py custom_command
+env_devmode = os.getenv("DJANGO_DEVMODE")
+if env_devmode is None:
+    DEVMODE = "runserver" in sys.argv or "shell" in sys.argv
+else:
+    DEVMODE = env_devmode.lower() == "true"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# TODO: set this from config
-BASE_URL = "http://localhost:8000"
+
+cfg = du.get_nearest_config("config.toml", devmode=DEVMODE)
+SECRET_KEY = cfg("SECRET_KEY")
+
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = cfg("DEBUG")
+BASE_URL = cfg("BASE_URL")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-8nkxlsn!-j44ovymd7tk)=&exlndb4wj0ea-ny+*ugigcnpmrl"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = cfg("ALLOWED_HOSTS")
 
 
 # Application definition
