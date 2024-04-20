@@ -5,17 +5,22 @@
 
     --color-global-bg: #FFF;
     --color-gray-dark-text: #333;
+    --color-dim-text: hsl(00, 0%, 50%);;
     --color-red-dark-text: #733;
     --color-quote-background: hsl(25, 0%, 97%);
     --color-header-background: #EEE;
     --color-footer-background:  hsl(230, 20%, 15%);
     --color-footer-text:  hsl(00, 10%, 70%);
+    --color-border:  hsl(00, 0%, 70%);
     --color-header-warning-background: hsl(25, 100%, 80%);
     --header-height: 2em;
     --padding-header: 0.3em;
     --padding-v-quote: 4px;
     --padding-h-quote: 1em;
     --padding-content: min(2.5vw, 30px);
+    --padding-content2: calc(var(--padding-content)*0.5);
+    --padding-content2m: calc(var(--padding-content)*-0.5);
+
     --width-content: min(90vw, 60em); /*→ max width of 960px (@ vw=1280)*/
     --width-content-two-column: min(93vw, 100em); /* width for two column part*/
     --col-height: calc(100vh - var(--header-height)*3);
@@ -106,6 +111,32 @@ body a:hover{
     padding: var(--padding-header);
 }
 
+.h3c {
+  /* style headings which are semantically not h3 as h3 */
+  font-size: 120%;
+}
+
+.frame-title,
+.preview-frame {
+  /* margin-left: var(--padding-content2m);
+  margin-right: var(--padding-content2m);
+  */
+}
+.frame-title{
+  font-size: 70%;
+  color: var(--color-gray-dark-text);
+}
+
+.preview-frame {
+  padding-left: var(--padding-content2);
+  padding-right: var(--padding-content2);
+  margin-bottom: 10px;
+  border: 1px var(--color-border) solid;
+}
+
+.placeholder {
+  color: var(--color-dim-text);
+}
 .slug-preview {
     background-color: var(--color-quote-background);
 
