@@ -24,8 +24,7 @@
 
             <div><textarea class="form_input_fw" name="comment_for_reviewers" rows="5" id="comment_for_reviewers" placeholder="Enter your comment for the reviewers here as markdown text here" title="comment for reviewers">{{data.doc.comment_for_reviewers}}</textarea></div>
             <div><textarea class="form_input_fw" name="content" rows="10" required id="id_content" placeholder="Enter your (markdown) text here" title="document content">{{data.doc.content}}</textarea></div>
-
-            <div><input type="checkbox" class="" id="render_markdown" name="render_markdown" {% if data.doc.render_markdown %}checked{% endif %} value="True"> Render Markdown</div>
+            <div><input type="checkbox" class="" id="render_markdown" name="render_markdown" {% if data.doc is None or data.doc.render_markdown %}checked{% endif %} value="True"> Render Markdown</div>
 
             {% if data.doc %}
             <!--utc_doc_new_save_button-->

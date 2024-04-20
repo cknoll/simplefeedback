@@ -111,6 +111,9 @@ body a:hover{
 
 }
 
+code  {
+  background-color: var(--color-quote-background);
+}
 blockquote {
 
     background-color: var(--color-quote-background);
