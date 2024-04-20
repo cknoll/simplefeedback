@@ -43,13 +43,19 @@
 </div> <!-- end of left column -->
 <div class="right-column">
 
+    {% if data.doc.review_nbr %}
+
     <h2>Review Details</h2>
 
     Meta data: <span id="review-detail-meta"></span>
 
     <br>
     <br>
-    Content: <div id="review-detail-content"></div>
+    Content: <div id="review-detail-content"><span class="placeholder">No comment selected</span></div>
+    {% else %}
+    <br><br><br>
+    <div class="placeholder">No review yet available</div>
+    {% endif %}
 
 </div> <!-- end of right column -->
 
