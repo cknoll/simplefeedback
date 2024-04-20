@@ -7,10 +7,14 @@
 <!--utc_doc_owner-->
     {#debug: {{data}}#}
     {#doc: {{data}}#}
+
+    <!-- needed for unittests: -->
     {{ data.doc.doc_key|json_script:"doc_key" }}
     {{ data.doc.owner_key|json_script:"owner_key" }}
 
 {% if data.doc.owner_mode %}
+{{ data.doc.doc_key|json_script:"doc_key" }}
+{{ data.doc.owner_key|json_script:"owner_key" }}
 
 {{ data.doc.review_nbr|json_script:"review_nbr" }}
 
