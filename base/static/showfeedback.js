@@ -32,6 +32,9 @@ var hl = new Highlighter(sac, null);
 // };
 
 var annotationArray = {};
+var annotationList = [];
+var annotationListIndex = null;
+var activeAnnotation = null;
 
 
 // prepare detail display in right colum
@@ -43,6 +46,11 @@ function annClickHandler(span) {
     // Get the content of the clicked span element
     const spanContent = span.textContent;
     const ann = annotationArray[span.id]
+    if (activeAnnotation){
+      activeAnnotation.classList.remove("unique-active-annotation-hl");
+    }
+    activeAnnotation = span;
+    span.classList.add("unique-active-annotation-hl");
     reviewDetailMetaDiv.textContent = `Reviewer: ${ann.feedback.reviewer}, ${ann.feedback.date}`;
     reviewDetailContentDiv.textContent = `${ann.comment_value}`;
   });
@@ -60,6 +68,37 @@ function connectAnnotationSpans(){
     });
 };
 
+function activateNextAnnotation(){
+
+  if (annotationListIndex === null){
+    annotationListIndex = 0;
+  } else {
+    annotationListIndex += 1;
+    annotationListIndex %= annotationList.length;
+  }
+  activateIndexedAnnotation(annotationListIndex);
+}
+
+function activatePrevAnnotation(){
+
+    if (annotationListIndex === null){
+      annotationListIndex = annotationList.length - 1;
+    } else {
+      // prevent getting negative numbers
+      annotationListIndex += annotationList.length - 1;
+      annotationListIndex %= annotationList.length;
+    }
+  activateIndexedAnnotation(annotationListIndex);
+}
+
+function activateIndexedAnnotation(annotationListIndex){
+  console.log(annotationListIndex);
+  var ann = annotationList[annotationListIndex];
+  var span = document.getElementById(ann.pk);
+  span.click();
+}
+
+
 
 // do some asynchronous work
 const a = (async () => {
@@ -70,6 +109,9 @@ const a = (async () => {
 
     //make annotations easily available
     fixedAnnotations.forEach(ann => annotationArray[ann.pk] = ann);
+    annotationList = Object.values(annotationArray);
+    annotationList.sort((a, b) => a.start - b.start);
+
   })();
 
 
