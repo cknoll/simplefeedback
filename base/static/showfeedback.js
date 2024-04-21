@@ -60,25 +60,35 @@ function setActiveAnnotationSpans(annSpans) {
 
 }
 
+function handleClickEvent(span) {
+  /*
+  * This is a separate function because triggering span.click() has
+  * unintended sideeffects in nested spans
+  */
+
+  // one span was clicked, but multiple spans might be affected
+  // get all relevant spans
+  const annId = span.id.split("--")[0];
+
+  // convert from live collection to an ordinary list
+  const annSpans = Array.from(document.getElementsByClassName(`ann-${annId}`));
+
+  resetActiveAnnotationSpans();
+  setActiveAnnotationSpans(annSpans);
+
+  // Get the content of the clicked span element (currently not used)
+  // const spanContent = span.textContent;
+
+  // display the annotation content in the left column
+  const ann = annotationArray[annId]
+  reviewDetailMetaDiv.textContent = `Reviewer: ${ann.feedback.reviewer}, ${ann.feedback.date}`;
+  reviewDetailContentDiv.textContent = `${ann.comment_value}`;
+}
+
+
 function annClickHandler(span) {
   const handler = (() => {
-    // one span was clicked, but multiple spans might be affected
-    // get all relevant spans
-    const annId = span.id.split("--")[0];
-
-    // convert from live collection to an ordinary list
-    const annSpans = Array.from(document.getElementsByClassName(`ann-${annId}`));
-
-    resetActiveAnnotationSpans();
-    setActiveAnnotationSpans(annSpans);
-
-    // Get the content of the clicked span element (currently not used)
-    // const spanContent = span.textContent;
-
-    // display the annotation content in the left column
-    const ann = annotationArray[annId]
-    reviewDetailMetaDiv.textContent = `Reviewer: ${ann.feedback.reviewer}, ${ann.feedback.date}`;
-    reviewDetailContentDiv.textContent = `${ann.comment_value}`;
+    handleClickEvent(span);
   });
   return handler;
 };
@@ -133,8 +143,9 @@ function activateIndexedAnnotation(annotationListIndex){
 
   // trigger click event only on one element (which will handle all the other spans)
   if (spans.length) {
-    spans[0].click();
+    handleClickEvent(spans[0]);
   }
+
 }
 
 

@@ -330,7 +330,6 @@ class Highlighter {
 
       // And wrap nodes in between, if any
       var centerWrappers = nodesBetween.reverse().map(function(node) {
-        console.log(node);
         const wrapper = document.createElement('SPAN');
         node.parentNode.insertBefore(wrapper, node);
         wrapper.appendChild(node);
