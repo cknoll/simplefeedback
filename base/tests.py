@@ -10,6 +10,8 @@ from django.conf import settings
 from base import models
 
 from splinter import Browser
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 from ipydex import IPS
 
@@ -147,7 +149,7 @@ class TestCore1(TestCase):
 
 class TestGUI(StaticLiveServerTestCase):
     fixtures = ["base/testdata/fixtures01.json"]
-    headless = False
+    headless = True
 
     def setUp(self) -> None:
         self.options_for_browser = dict(driver_name='chrome', headless=self.headless)
@@ -218,6 +220,55 @@ class TestGUI(StaticLiveServerTestCase):
             "document", "contains", "Markdown", "fact", "that it ", tmp1, "is", " formatted."
         ]
         self.assertEqual(hl_span_list, expected)
+        elt_content = b1.find_by_id("review-detail-content")[0]
+        elt_meta = b1.find_by_id("review-detail-meta")[0]
+        btn_prev = b1.find_by_id("btn-activate-prev-ann")[0]
+        btn_next = b1.find_by_id("btn-activate-next-ann")[0]
+
+        self.assertEqual(elt_content.text, "No comment selected")
+        self.assertEqual(elt_meta.text.strip(), "")
+
+        active_spans = b1.find_by_css(".unique-active-annotation-hl")
+        self.assertEqual(len(active_spans), 0)
+
+        btn_next.click()
+        active_spans = b1.find_by_css(".unique-active-annotation-hl")
+        self.assertEqual(len(active_spans), 1)
+        self.assertTrue(elt_meta.text.startswith("#0"))
+        self.assertTrue(elt_content.text.startswith("c1"))
+
+        btn_next.click()
+        active_spans = b1.find_by_css(".unique-active-annotation-hl")
+        self.assertEqual(len(active_spans), 2)
+        self.assertTrue(elt_meta.text.startswith("#1"))
+        self.assertTrue(elt_content.text.startswith("c2"))
+
+        btn_prev.click()
+        btn_prev.click()
+        self.assertTrue(elt_meta.text.startswith("#4"))
+        self.assertTrue(elt_content.text.startswith("c4"))
+
+        btn_prev.click()
+        self.assertTrue(elt_meta.text.startswith("#3"))
+        self.assertTrue(elt_content.text.startswith("c5"))
+
+        send_key_to_browser(b1, Keys.LEFT)
+        self.assertTrue(elt_meta.text.startswith("#2"))
+
+        send_key_to_browser(b1, Keys.LEFT)
+        send_key_to_browser(b1, Keys.LEFT)
+        send_key_to_browser(b1, Keys.LEFT)
+        self.assertTrue(elt_meta.text.startswith("#4"))
+        send_key_to_browser(b1, Keys.RIGHT)
+        self.assertTrue(elt_meta.text.startswith("#0"))
+        send_key_to_browser(b1, Keys.RIGHT)
+        self.assertTrue(elt_meta.text.startswith("#1"))
+        send_key_to_browser(b1, Keys.RIGHT)
+        send_key_to_browser(b1, Keys.RIGHT)
+        send_key_to_browser(b1, Keys.RIGHT)
+        self.assertTrue(elt_meta.text.startswith("#4"))
+        send_key_to_browser(b1, Keys.RIGHT)
+        self.assertTrue(elt_meta.text.startswith("#0"))
 
 
 # #################################################################################################
@@ -225,6 +276,12 @@ class TestGUI(StaticLiveServerTestCase):
 # auxiliary functions:
 
 # #################################################################################################
+
+
+def send_key_to_browser(browser, key):
+    actions = ActionChains(browser.driver)
+    actions.send_keys(key)
+    actions.perform()
 
 
 def get_element_by_html_content(element_list: list, content: str):
