@@ -179,7 +179,7 @@ class TestGUI(StaticLiveServerTestCase):
 
         return browser
 
-    def test_make_review(self):
+    def test_01_make_review(self):
 
         b1 = self.new_browser()
         url = reverse("reviewpage", kwargs={"slug": "test-doc1", "doc_key": "8ada4"})
@@ -205,7 +205,7 @@ class TestGUI(StaticLiveServerTestCase):
         self.assertEqual(len(all_annotations1), NUMBER_OF_FIXTURE_ANNOTATIONS + 1)
 
 
-    def test_display_annotations_on_owner_page(self):
+    def test_02_display_annotations_on_owner_page(self):
         b1 = self.new_browser()
         url = reverse("documentpage", kwargs={"slug": "test-doc3", "doc_key": "4225a", "owner_key": "f8164504fd"})
         b1.visit(f"{self.live_server_url}{url}")
@@ -213,7 +213,7 @@ class TestGUI(StaticLiveServerTestCase):
         span_list = sac.find_by_tag("span")
         hl_span_list = [elt.html for elt in span_list if elt.has_class("annotation-hl") and elt.html not in ["", "\n"]]
 
-        tmp1 = '<span class="annotation-hl" id="a62ec9dd-0f85-4c29-a9ba-f827ab4d8dac">is</span>'
+        tmp1 = '<span class="ann-a62ec9dd-0f85-4c29-a9ba-f827ab4d8dac annotation-hl" id="a62ec9dd-0f85-4c29-a9ba-f827ab4d8dac--1">is</span>'
         expected = [
             "document", "contains", "Markdown", "fact", "that it ", tmp1, "is", " formatted."
         ]
