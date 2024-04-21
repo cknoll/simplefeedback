@@ -73,8 +73,9 @@ class Highlighter {
         // mark all spans which belong to this annotation with the same class
         span.classList.add(`ann-${annotation.pk}`);
         span.classList.add(`annotation-hl`.trim());
-        // !! TODO: achieve unique ids
-        span.id = annotation.pk;
+
+        // achieve unique ids
+        span.id = `${annotation.pk}--${idx}`;
       });
     // this.applyStyles(annotation, spans);
     // this.bindAnnotation(annotation, spans);

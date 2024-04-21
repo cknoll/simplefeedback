@@ -34,25 +34,49 @@ var hl = new Highlighter(sac, null);
 var annotationArray = {};
 var annotationList = [];
 var annotationListIndex = null;
-var activeAnnotation = null;
+var activeAnnotationSpans = null;
 
 
 // prepare detail display in right colum
 const reviewDetailMetaDiv = document.getElementById('review-detail-meta');
 const reviewDetailContentDiv = document.getElementById('review-detail-content');
 
-function annClickHandler(span) {
-  const handler = (() => {
-    // Get the content of the clicked span element
-    const spanContent = span.textContent;
-    const ann = annotationArray[span.id]
-    if (activeAnnotation){
-      activeAnnotation.classList.remove("unique-active-annotation-hl");
-      activeAnnotation.classList.add("annotation-hl");
-    }
-    activeAnnotation = span;
+
+function resetActiveAnnotationSpans(){
+  if (activeAnnotationSpans === null) return;
+
+  activeAnnotationSpans.forEach(span => {
+    span.classList.remove("unique-active-annotation-hl");
+    span.classList.add("annotation-hl");
+  });
+}
+
+function setActiveAnnotationSpans(annSpans) {
+  activeAnnotationSpans = annSpans;
+  activeAnnotationSpans.forEach(span => {
     span.classList.remove("annotation-hl");
     span.classList.add("unique-active-annotation-hl");
+  });
+
+}
+
+function annClickHandler(span) {
+  const handler = (() => {
+    // one span was clicked, but multiple spans might be affected
+    // get all relevant spans
+    const annId = span.id.split("--")[0];
+
+    // convert from live collection to an ordinary list
+    const annSpans = Array.from(document.getElementsByClassName(`ann-${annId}`));
+
+    resetActiveAnnotationSpans();
+    setActiveAnnotationSpans(annSpans);
+
+    // Get the content of the clicked span element (currently not used)
+    // const spanContent = span.textContent;
+
+    // display the annotation content in the left column
+    const ann = annotationArray[annId]
     reviewDetailMetaDiv.textContent = `Reviewer: ${ann.feedback.reviewer}, ${ann.feedback.date}`;
     reviewDetailContentDiv.textContent = `${ann.comment_value}`;
   });
@@ -97,10 +121,20 @@ function activateIndexedAnnotation(annotationListIndex){
   /*
   * one annotation can consist of multiple span-elements
   */
-  var ann = annotationList[annotationListIndex];
-  var span = document.getElementById(ann.pk);
+  const ann = annotationList[annotationListIndex];
+  const spans = document.getElementsByClassName(`ann-${ann.pk}`)
+  // var span = document.getElementById(ann.pk);
   // console.log(annotationListIndex, span);
-  span.click();
+
+  // obsolete
+  // spans.forEach((span, idx) => {
+  //   span.click();
+  // });
+
+  // trigger click event only on one element (which will handle all the other spans)
+  if (spans.length) {
+    spans[0].click();
+  }
 }
 
 
