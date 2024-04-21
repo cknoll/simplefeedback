@@ -104,6 +104,21 @@ function connectAnnotationSpans(){
     });
 };
 
+function connectButtons(){
+  document.getElementById("btn-activate-prev-ann").addEventListener('click', activatePrevAnnotation)
+  document.getElementById("btn-activate-next-ann").addEventListener('click', activateNextAnnotation)
+
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowLeft") {
+      // Call a function for the left arrow key
+      activatePrevAnnotation();
+    } else if (event.key === "ArrowRight") {
+      // Call a function for the right arrow key
+      activateNextAnnotation();
+    }
+  });
+}
+
 function activateNextAnnotation(){
 
   if (annotationListIndex === null){
@@ -156,6 +171,7 @@ const a = (async () => {
 
     await hl.init(fixedAnnotations);
     connectAnnotationSpans();
+    connectButtons();
 
     //make annotations easily available
     fixedAnnotations.forEach(ann => annotationArray[ann.pk] = ann);

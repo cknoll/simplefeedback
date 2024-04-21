@@ -45,7 +45,13 @@
 
     {% if data.doc.review_nbr %}
 
-    <h2>Review Details</h2>
+    <div class="right-column-headline-container">
+        <h2>Review Details</h2>
+        <div class="prev-next-button-container button">
+          <button id="btn-activate-prev-ann">←</button>
+          <button id="btn-activate-next-ann">→</button>
+        </div>
+      </div>
 
     Meta data: <span id="review-detail-meta"></span>
 
