@@ -1,6 +1,7 @@
 {% load bleach_tags %}
 {% load extra_filters %}
 
+<!-- utc_doc_content -->
 <div id="{% if class %}{{class}}{% else %}annotation_content{% endif %}">
 {% if data.doc.render_markdown %}
 {{data.doc.content|render_markdown|bleach}}

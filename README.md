@@ -6,7 +6,7 @@ The goals is the following:
 
 ## Idea Description
 
-- The user (A) can upload a text in markdown.
+- The user (A) can submit a text in markdown.
 - The user (A) receives 2 URLS:
     - easyfeedback.net/\<text-slug>-\<ownertoken>
     - easyfeedback.net/\<text-slug>-\<reviewtoken>
@@ -47,12 +47,16 @@ Visualizing annotations:
 
 Idea: two columns; left panel: main text, right panel: current annotation.
 
-left panel: all annotated text-sections (ATS) are highlighted in soft yellow. Sections which are covered by multiple annotations have stronger highlight, clicking on an ATS activates it; active ATS:
-is highlighted stronger and displayed in the right panel.
+left panel: all annotated text-sections (ATS) are highlighted in soft yellow. Sections which are covered by multiple annotations have stronger highlight, clicking on an ATS activates it;
 
-
+active ATS:
+is highlighted with different border color and displayed in the right panel.
 
 right panel: shows metadata (top, small) and comment, offers possibility to copy comment
+
+there are buttons (also activeateable by keys) to select the previous and next annotation. This also solves to access annotations which refer to the same text.
+
+highlighting annotations which refer to the same text: is tricky because of the interaction of outer span and inner span and css selectors
 
 
 ### Current Bugs:

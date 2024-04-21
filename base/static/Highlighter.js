@@ -66,9 +66,16 @@ class Highlighter {
       // this.range = range;
 
       const spans = this.wrapRange(range);
-      spans.forEach(span => {
-        span.className = `annotation-hl`.trim();
-        span.id = annotation.pk;
+      spans.forEach((span, idx) => {
+        // end loop for empty elements
+        if (span.textContent.trim() == "") return;
+
+        // mark all spans which belong to this annotation with the same class
+        span.classList.add(`ann-${annotation.pk}`);
+        span.classList.add(`annotation-hl`.trim());
+
+        // achieve unique ids
+        span.id = `${annotation.pk}--${idx}`;
       });
     // this.applyStyles(annotation, spans);
     // this.bindAnnotation(annotation, spans);

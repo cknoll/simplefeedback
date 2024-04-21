@@ -7,10 +7,14 @@
 <!--utc_doc_owner-->
     {#debug: {{data}}#}
     {#doc: {{data}}#}
+
+    <!-- needed for unittests: -->
     {{ data.doc.doc_key|json_script:"doc_key" }}
     {{ data.doc.owner_key|json_script:"owner_key" }}
 
 {% if data.doc.owner_mode %}
+{{ data.doc.doc_key|json_script:"doc_key" }}
+{{ data.doc.owner_key|json_script:"owner_key" }}
 
 {{ data.doc.review_nbr|json_script:"review_nbr" }}
 
@@ -39,13 +43,26 @@
 </div> <!-- end of left column -->
 <div class="right-column">
 
-    <h2>Review Details</h2>
+    {% if data.doc.review_nbr %}
 
-    Meta data: <span id="review-detail-meta"></span>
+    <div class="right-column-headline-container">
+        <h2>Review Details</h2>
+        <div class="prev-next-button-container button">
+          <button class="arrow-button" id="btn-activate-prev-ann"> <i class="arrow arrow-left"></i> Prev</button>
+          <button class="arrow-button" id="btn-activate-next-ann">Next  <i class="arrow arrow-right"></i></button>
+        </div>
+      </div>
+
+    <div class="frame-title">Meta data:</div>
+    <div class="preview-frame" id="review-detail-meta">&nbsp;
+    </div>
 
     <br>
-    <br>
-    Content: <div id="review-detail-content"></div>
+    Content: <div id="review-detail-content"><span class="placeholder">No comment selected</span></div>
+    {% else %}
+    <br><br><br>
+    <div class="placeholder">No review yet available</div>
+    {% endif %}
 
 </div> <!-- end of right column -->
 

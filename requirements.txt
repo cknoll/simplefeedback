@@ -1,5 +1,7 @@
 django
 bleach
 django-bleach
+djangorestframework
 pytest
 pytest-django
+markdown

@@ -32,19 +32,67 @@ var hl = new Highlighter(sac, null);
 // };
 
 var annotationArray = {};
+var annotationList = [];
+var annotationListIndex = null;
+var activeAnnotationSpans = null;
+
+// for each Id store the index
+var annotationIdIndexMap = {};
 
 
 // prepare detail display in right colum
 const reviewDetailMetaDiv = document.getElementById('review-detail-meta');
 const reviewDetailContentDiv = document.getElementById('review-detail-content');
 
+
+function resetActiveAnnotationSpans(){
+  if (activeAnnotationSpans === null) return;
+
+  activeAnnotationSpans.forEach(span => {
+    span.classList.remove("unique-active-annotation-hl");
+    span.classList.add("annotation-hl");
+  });
+}
+
+function setActiveAnnotationSpans(annSpans) {
+  activeAnnotationSpans = annSpans;
+  activeAnnotationSpans.forEach(span => {
+    span.classList.remove("annotation-hl");
+    span.classList.add("unique-active-annotation-hl");
+  });
+
+}
+
+function handleClickEvent(span) {
+  /*
+  * This is a separate function because triggering span.click() has
+  * unintended sideeffects in nested spans
+  */
+
+  // one span was clicked, but multiple spans might be affected
+  // get all relevant spans
+  const annId = span.id.split("--")[0];
+  annotationListIndex = annotationIdIndexMap[annId];
+
+  // convert from live collection to an ordinary list
+  const annSpans = Array.from(document.getElementsByClassName(`ann-${annId}`));
+
+  resetActiveAnnotationSpans();
+  setActiveAnnotationSpans(annSpans);
+
+  // Get the content of the clicked span element (currently not used)
+  // const spanContent = span.textContent;
+
+  // display the annotation content in the left column
+  const ann = annotationArray[annId]
+  reviewDetailMetaDiv.textContent = `#${annotationListIndex}: Reviewer: ${ann.feedback.reviewer}, ${ann.feedback.date}`;
+  reviewDetailContentDiv.textContent = `${ann.comment_value}`;
+}
+
+
 function annClickHandler(span) {
   const handler = (() => {
-    // Get the content of the clicked span element
-    const spanContent = span.textContent;
-    const ann = annotationArray[span.id]
-    reviewDetailMetaDiv.textContent = `Reviewer: ${ann.feedback.reviewer}, ${ann.feedback.date}`;
-    reviewDetailContentDiv.textContent = `${ann.comment_value}`;
+    handleClickEvent(span);
   });
   return handler;
 };
@@ -60,6 +108,78 @@ function connectAnnotationSpans(){
     });
 };
 
+function connectButtons(){
+  document.getElementById("btn-activate-prev-ann").addEventListener('click', activatePrevAnnotation)
+  document.getElementById("btn-activate-next-ann").addEventListener('click', activateNextAnnotation)
+
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowLeft") {
+      // Call a function for the left arrow key
+      activatePrevAnnotation();
+    } else if (event.key === "ArrowRight") {
+      // Call a function for the right arrow key
+      activateNextAnnotation();
+    }
+  });
+}
+
+function activateNextAnnotation(){
+
+  const button = document.getElementById("btn-activate-next-ann");
+  button.classList.add('button-active');
+  setTimeout(() => {
+    button.classList.remove('button-active');
+  }, 100);
+
+  if (annotationListIndex === null){
+    annotationListIndex = 0;
+  } else {
+    annotationListIndex += 1;
+    annotationListIndex %= annotationList.length;
+  }
+  activateIndexedAnnotation(annotationListIndex);
+}
+
+function activatePrevAnnotation(){
+
+  const button = document.getElementById("btn-activate-prev-ann");
+  button.classList.add('button-active');
+  setTimeout(() => {
+    button.classList.remove('button-active');
+  }, 100);
+
+    if (annotationListIndex === null){
+      annotationListIndex = annotationList.length - 1;
+    } else {
+      // prevent getting negative numbers
+      annotationListIndex += annotationList.length - 1;
+      annotationListIndex %= annotationList.length;
+    }
+  activateIndexedAnnotation(annotationListIndex);
+}
+
+function activateIndexedAnnotation(annotationListIndex){
+  /*
+  * one annotation can consist of multiple span-elements
+  */
+  const ann = annotationList[annotationListIndex];
+  const spans = document.getElementsByClassName(`ann-${ann.pk}`)
+  // var span = document.getElementById(ann.pk);
+  // console.log(annotationListIndex, span);
+
+  // obsolete
+  // spans.forEach((span, idx) => {
+  //   span.click();
+  // });
+
+  // trigger click event only on one element (which will handle all the other spans)
+  if (spans.length) {
+    handleClickEvent(spans[0]);
+  }
+
+}
+
+
 
 // do some asynchronous work
 const a = (async () => {
@@ -67,9 +187,14 @@ const a = (async () => {
 
     await hl.init(fixedAnnotations);
     connectAnnotationSpans();
+    connectButtons();
 
     //make annotations easily available
     fixedAnnotations.forEach(ann => annotationArray[ann.pk] = ann);
+    annotationList = Object.values(annotationArray);
+    annotationList.sort((a, b) => a.start - b.start);
+    annotationList.forEach( (ann, idx) => annotationIdIndexMap[ann.pk] = idx);
+
   })();
 
 

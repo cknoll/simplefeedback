@@ -9,7 +9,9 @@ from django.urls import reverse
 from django.conf import settings
 from base import models
 
-from splinter import Browser
+from splinter import Browser, Config
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 from ipydex import IPS
 
@@ -147,10 +149,13 @@ class TestCore1(TestCase):
 
 class TestGUI(StaticLiveServerTestCase):
     fixtures = ["base/testdata/fixtures01.json"]
-    headless = False
+    headless = True
 
     def setUp(self) -> None:
-        self.options_for_browser = dict(driver_name='chrome', headless=self.headless)
+        self.options_for_browser = dict(driver_name='chrome')
+
+        # docs: https://splinter.readthedocs.io/en/latest/config.html
+        self.config_for_browser = Config(headless=self.headless)
 
         self.browsers = []
 
@@ -173,13 +178,14 @@ class TestGUI(StaticLiveServerTestCase):
 
         :return: browser object and its index
         """
-        browser = Browser(**self.options_for_browser)
+
+        browser = Browser(**self.options_for_browser, config=self.config_for_browser)
         browser.logs = []
         self.browsers.append(browser)
 
         return browser
 
-    def test_make_review(self):
+    def test_01_make_review(self):
 
         b1 = self.new_browser()
         url = reverse("reviewpage", kwargs={"slug": "test-doc1", "doc_key": "8ada4"})
@@ -205,7 +211,7 @@ class TestGUI(StaticLiveServerTestCase):
         self.assertEqual(len(all_annotations1), NUMBER_OF_FIXTURE_ANNOTATIONS + 1)
 
 
-    def test_display_annotations_on_owner_page(self):
+    def test_02_display_annotations_on_owner_page(self):
         b1 = self.new_browser()
         url = reverse("documentpage", kwargs={"slug": "test-doc3", "doc_key": "4225a", "owner_key": "f8164504fd"})
         b1.visit(f"{self.live_server_url}{url}")
@@ -213,11 +219,60 @@ class TestGUI(StaticLiveServerTestCase):
         span_list = sac.find_by_tag("span")
         hl_span_list = [elt.html for elt in span_list if elt.has_class("annotation-hl") and elt.html not in ["", "\n"]]
 
-        tmp1 = '<span class="annotation-hl" id="a62ec9dd-0f85-4c29-a9ba-f827ab4d8dac">is</span>'
+        tmp1 = '<span class="ann-a62ec9dd-0f85-4c29-a9ba-f827ab4d8dac annotation-hl" id="a62ec9dd-0f85-4c29-a9ba-f827ab4d8dac--1">is</span>'
         expected = [
             "document", "contains", "Markdown", "fact", "that it ", tmp1, "is", " formatted."
         ]
         self.assertEqual(hl_span_list, expected)
+        elt_content = b1.find_by_id("review-detail-content")[0]
+        elt_meta = b1.find_by_id("review-detail-meta")[0]
+        btn_prev = b1.find_by_id("btn-activate-prev-ann")[0]
+        btn_next = b1.find_by_id("btn-activate-next-ann")[0]
+
+        self.assertEqual(elt_content.text, "No comment selected")
+        self.assertEqual(elt_meta.text.strip(), "")
+
+        active_spans = b1.find_by_css(".unique-active-annotation-hl")
+        self.assertEqual(len(active_spans), 0)
+
+        btn_next.click()
+        active_spans = b1.find_by_css(".unique-active-annotation-hl")
+        self.assertEqual(len(active_spans), 1)
+        self.assertTrue(elt_meta.text.startswith("#0"))
+        self.assertTrue(elt_content.text.startswith("c1"))
+
+        btn_next.click()
+        active_spans = b1.find_by_css(".unique-active-annotation-hl")
+        self.assertEqual(len(active_spans), 2)
+        self.assertTrue(elt_meta.text.startswith("#1"))
+        self.assertTrue(elt_content.text.startswith("c2"))
+
+        btn_prev.click()
+        btn_prev.click()
+        self.assertTrue(elt_meta.text.startswith("#4"))
+        self.assertTrue(elt_content.text.startswith("c4"))
+
+        btn_prev.click()
+        self.assertTrue(elt_meta.text.startswith("#3"))
+        self.assertTrue(elt_content.text.startswith("c5"))
+
+        send_key_to_browser(b1, Keys.LEFT)
+        self.assertTrue(elt_meta.text.startswith("#2"))
+
+        send_key_to_browser(b1, Keys.LEFT)
+        send_key_to_browser(b1, Keys.LEFT)
+        send_key_to_browser(b1, Keys.LEFT)
+        self.assertTrue(elt_meta.text.startswith("#4"))
+        send_key_to_browser(b1, Keys.RIGHT)
+        self.assertTrue(elt_meta.text.startswith("#0"))
+        send_key_to_browser(b1, Keys.RIGHT)
+        self.assertTrue(elt_meta.text.startswith("#1"))
+        send_key_to_browser(b1, Keys.RIGHT)
+        send_key_to_browser(b1, Keys.RIGHT)
+        send_key_to_browser(b1, Keys.RIGHT)
+        self.assertTrue(elt_meta.text.startswith("#4"))
+        send_key_to_browser(b1, Keys.RIGHT)
+        self.assertTrue(elt_meta.text.startswith("#0"))
 
 
 # #################################################################################################
@@ -225,6 +280,12 @@ class TestGUI(StaticLiveServerTestCase):
 # auxiliary functions:
 
 # #################################################################################################
+
+
+def send_key_to_browser(browser, key):
+    actions = ActionChains(browser.driver)
+    actions.send_keys(key)
+    actions.perform()
 
 
 def get_element_by_html_content(element_list: list, content: str):

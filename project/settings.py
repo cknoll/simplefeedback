@@ -10,26 +10,47 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import sys
+import os
 from pathlib import Path
-import bleach
+import deploymentutils as du
+
+
+# export DJANGO_DEVMODE=True; py3 manage.py custom_command
+env_devmode = os.getenv("DJANGO_DEVMODE")
+if env_devmode is None:
+    DEVMODE = "runserver" in sys.argv or "shell" in sys.argv
+else:
+    DEVMODE = env_devmode.lower() == "true"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.as_posix()
 
-# TODO: set this from config
-BASE_URL = "http://localhost:8000"
+
+cfg = du.get_nearest_config("config.toml", devmode=DEVMODE)
+SECRET_KEY = cfg("SECRET_KEY")
+
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = cfg("DEBUG")
+BASE_URL = cfg("BASE_URL")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-8nkxlsn!-j44ovymd7tk)=&exlndb4wj0ea-ny+*ugigcnpmrl"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+ALLOWED_HOSTS = cfg("ALLOWED_HOSTS")
 
-ALLOWED_HOSTS = []
+
+# Collect static files here (will be copied to correct location by deployment script)
+STATIC_ROOT = cfg("STATIC_ROOT").replace("__BASEDIR__", BASE_DIR)
+
+# Collect media files here (unclear whether we need this, copied from codequiz)
+MEDIA_ROOT = cfg("MEDIA_ROOT").replace("__BASEDIR__", BASE_DIR)
+
+# not yet used
+BACKUP_PATH = os.path.abspath(cfg("BACKUP_PATH").replace("__BASEDIR__", BASE_DIR))
 
 
 # Application definition
@@ -83,7 +104,7 @@ WSGI_APPLICATION = "project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": Path(BASE_DIR) / cfg("DB_FILE_NAME"),
     }
 }
 
@@ -132,7 +153,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 BLEACH_ALLOWED_TAGS = [
     'p', 'b', 'i', 'u', 'em', 'strong', 'a', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'ul', 'ol', 'li', 'pre', 'code'
-]
+] + ["br", "hr", "blockquote"]
 BLEACH_STRIP_COMMENTS = False
 
 

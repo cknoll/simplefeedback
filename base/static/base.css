@@ -5,17 +5,22 @@
 
     --color-global-bg: #FFF;
     --color-gray-dark-text: #333;
+    --color-dim-text: hsl(00, 0%, 50%);;
     --color-red-dark-text: #733;
     --color-quote-background: hsl(25, 0%, 97%);
     --color-header-background: #EEE;
     --color-footer-background:  hsl(230, 20%, 15%);
     --color-footer-text:  hsl(00, 10%, 70%);
+    --color-border:  hsl(00, 0%, 70%);
     --color-header-warning-background: hsl(25, 100%, 80%);
     --header-height: 2em;
     --padding-header: 0.3em;
     --padding-v-quote: 4px;
     --padding-h-quote: 1em;
     --padding-content: min(2.5vw, 30px);
+    --padding-content2: calc(var(--padding-content)*0.5);
+    --padding-content2m: calc(var(--padding-content)*-0.5);
+
     --width-content: min(90vw, 60em); /*→ max width of 960px (@ vw=1280)*/
     --width-content-two-column: min(93vw, 100em); /* width for two column part*/
     --col-height: calc(100vh - var(--header-height)*3);
@@ -106,11 +111,35 @@ body a:hover{
     padding: var(--padding-header);
 }
 
+.h3c {
+  /* style headings which are semantically not h3 as h3 */
+  font-size: 120%;
+}
+
+
+.frame-title{
+  font-size: 70%;
+  color: var(--color-gray-dark-text);
+}
+
+.preview-frame {
+  padding-left: var(--padding-content2);
+  padding-right: var(--padding-content2);
+  margin-bottom: 10px;
+  border: 1px var(--color-border) solid;
+}
+
+.placeholder {
+  color: var(--color-dim-text);
+}
 .slug-preview {
     background-color: var(--color-quote-background);
 
 }
 
+code  {
+  background-color: var(--color-quote-background);
+}
 blockquote {
 
     background-color: var(--color-quote-background);
@@ -220,16 +249,62 @@ div.header a:hover{
 }
 
 .right-column {
-    position: sticky;
-    /* top: 2em; */
-    width: 50%;
-    overflow-y: auto;
-    padding: 20px;
-    padding-top: 0px;
+  position: sticky;
+  /* top: 2em; */
+  width: 50%;
+  overflow-y: auto;
+  padding: 20px;
+  padding-top: 0px;
     border-left: 1px solid #ccc;
     /* for debugging */
     /* border: 1px solid blue; */
 }
+.right-column-headline-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prev-next-button-container button {
+  margin-left: 10px;
+}
+
+/* We do not use pseudo-class :active here beacuse the event might
+ *  also be triggered by a js function triggered by a key
+ */
+.button-active {
+    background: var(--color-quote-background) !important;
+}
+
+.arrow-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.arrow-right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.arrow-left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+
 
 #review-detail-content {
   margin-top: 1em;
@@ -241,6 +316,13 @@ div.header a:hover{
     background-color:rgba(255, 165, 0, 0.2);
     border-bottom:2px solid orange;
     cursor:pointer;
+  }
+
+  .unique-active-annotation-hl, .unique-active-annotation-hl .annotation-hl {
+    background-color:rgba(255, 165, 0, 0.2);
+    border-bottom:2px solid lightseagreen !important;
+    cursor:pointer;
+    z-index: 10;
   }
 
 
