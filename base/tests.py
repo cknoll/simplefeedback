@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.conf import settings
 from base import models
 
-from splinter import Browser
+from splinter import Browser, Config
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -152,7 +152,10 @@ class TestGUI(StaticLiveServerTestCase):
     headless = True
 
     def setUp(self) -> None:
-        self.options_for_browser = dict(driver_name='chrome', headless=self.headless)
+        self.options_for_browser = dict(driver_name='chrome')
+
+        # docs: https://splinter.readthedocs.io/en/latest/config.html
+        self.config_for_browser = Config(headless=self.headless)
 
         self.browsers = []
 
@@ -175,7 +178,8 @@ class TestGUI(StaticLiveServerTestCase):
 
         :return: browser object and its index
         """
-        browser = Browser(**self.options_for_browser)
+
+        browser = Browser(**self.options_for_browser, config=self.config_for_browser)
         browser.logs = []
         self.browsers.append(browser)
 
