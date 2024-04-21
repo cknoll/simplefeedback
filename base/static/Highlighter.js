@@ -66,8 +66,14 @@ class Highlighter {
       // this.range = range;
 
       const spans = this.wrapRange(range);
-      spans.forEach(span => {
-        span.className = `annotation-hl`.trim();
+      spans.forEach((span, idx) => {
+        // end loop for empty elements
+        if (span.textContent.trim() == "") return;
+
+        // mark all spans which belong to this annotation with the same class
+        span.classList.add(`ann-${annotation.pk}`);
+        span.classList.add(`annotation-hl`.trim());
+        // !! TODO: achieve unique ids
         span.id = annotation.pk;
       });
     // this.applyStyles(annotation, spans);
@@ -323,6 +329,7 @@ class Highlighter {
 
       // And wrap nodes in between, if any
       var centerWrappers = nodesBetween.reverse().map(function(node) {
+        console.log(node);
         const wrapper = document.createElement('SPAN');
         node.parentNode.insertBefore(wrapper, node);
         wrapper.appendChild(node);

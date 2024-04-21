@@ -56,6 +56,8 @@ right panel: shows metadata (top, small) and comment, offers possibility to copy
 
 there are buttons (also activeateable by keys) to select the previous and next annotation. This also solves to access annotations which refer to the same text.
 
+highlighting annotations which refer to the same text: is tricky because of the interaction of outer span and inner span and css selectors
+
 
 ### Current Bugs:
 

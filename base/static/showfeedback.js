@@ -48,8 +48,10 @@ function annClickHandler(span) {
     const ann = annotationArray[span.id]
     if (activeAnnotation){
       activeAnnotation.classList.remove("unique-active-annotation-hl");
+      activeAnnotation.classList.add("annotation-hl");
     }
     activeAnnotation = span;
+    span.classList.remove("annotation-hl");
     span.classList.add("unique-active-annotation-hl");
     reviewDetailMetaDiv.textContent = `Reviewer: ${ann.feedback.reviewer}, ${ann.feedback.date}`;
     reviewDetailContentDiv.textContent = `${ann.comment_value}`;
@@ -92,9 +94,12 @@ function activatePrevAnnotation(){
 }
 
 function activateIndexedAnnotation(annotationListIndex){
-  console.log(annotationListIndex);
+  /*
+  * one annotation can consist of multiple span-elements
+  */
   var ann = annotationList[annotationListIndex];
   var span = document.getElementById(ann.pk);
+  // console.log(annotationListIndex, span);
   span.click();
 }
 
