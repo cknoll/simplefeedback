@@ -48,14 +48,15 @@
     <div class="right-column-headline-container">
         <h2>Review Details</h2>
         <div class="prev-next-button-container button">
-          <button id="btn-activate-prev-ann">←</button>
-          <button id="btn-activate-next-ann">→</button>
+          <button class="arrow-button" id="btn-activate-prev-ann"> <i class="arrow arrow-left"></i> Prev</button>
+          <button class="arrow-button" id="btn-activate-next-ann">Next  <i class="arrow arrow-right"></i></button>
         </div>
       </div>
 
-    Meta data: <span id="review-detail-meta"></span>
+    <div class="frame-title">Meta data:</div>
+    <div class="preview-frame" id="review-detail-meta">&nbsp;
+    </div>
 
-    <br>
     <br>
     Content: <div id="review-detail-content"><span class="placeholder">No comment selected</span></div>
     {% else %}

@@ -264,9 +264,46 @@ div.header a:hover{
   justify-content: space-between;
   align-items: center;
 }
+
 .prev-next-button-container button {
   margin-left: 10px;
 }
+
+/* We do not use pseudo-class :active here beacuse the event might
+ *  also be triggered by a js function triggered by a key
+ */
+.button-active {
+    background: var(--color-quote-background) !important;
+}
+
+.arrow-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.arrow-right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.arrow-left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
 
 
 #review-detail-content {

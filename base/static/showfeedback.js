@@ -36,6 +36,9 @@ var annotationList = [];
 var annotationListIndex = null;
 var activeAnnotationSpans = null;
 
+// for each Id store the index
+var annotationIdIndexMap = {};
+
 
 // prepare detail display in right colum
 const reviewDetailMetaDiv = document.getElementById('review-detail-meta');
@@ -69,6 +72,7 @@ function handleClickEvent(span) {
   // one span was clicked, but multiple spans might be affected
   // get all relevant spans
   const annId = span.id.split("--")[0];
+  annotationListIndex = annotationIdIndexMap[annId];
 
   // convert from live collection to an ordinary list
   const annSpans = Array.from(document.getElementsByClassName(`ann-${annId}`));
@@ -81,7 +85,7 @@ function handleClickEvent(span) {
 
   // display the annotation content in the left column
   const ann = annotationArray[annId]
-  reviewDetailMetaDiv.textContent = `Reviewer: ${ann.feedback.reviewer}, ${ann.feedback.date}`;
+  reviewDetailMetaDiv.textContent = `#${annotationListIndex}: Reviewer: ${ann.feedback.reviewer}, ${ann.feedback.date}`;
   reviewDetailContentDiv.textContent = `${ann.comment_value}`;
 }
 
@@ -121,6 +125,12 @@ function connectButtons(){
 
 function activateNextAnnotation(){
 
+  const button = document.getElementById("btn-activate-next-ann");
+  button.classList.add('button-active');
+  setTimeout(() => {
+    button.classList.remove('button-active');
+  }, 100);
+
   if (annotationListIndex === null){
     annotationListIndex = 0;
   } else {
@@ -131,6 +141,12 @@ function activateNextAnnotation(){
 }
 
 function activatePrevAnnotation(){
+
+  const button = document.getElementById("btn-activate-prev-ann");
+  button.classList.add('button-active');
+  setTimeout(() => {
+    button.classList.remove('button-active');
+  }, 100);
 
     if (annotationListIndex === null){
       annotationListIndex = annotationList.length - 1;
@@ -177,6 +193,7 @@ const a = (async () => {
     fixedAnnotations.forEach(ann => annotationArray[ann.pk] = ann);
     annotationList = Object.values(annotationArray);
     annotationList.sort((a, b) => a.start - b.start);
+    annotationList.forEach( (ann, idx) => annotationIdIndexMap[ann.pk] = idx);
 
   })();
 
