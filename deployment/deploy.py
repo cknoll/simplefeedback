@@ -223,6 +223,7 @@ def update_supervisorctl(c):
 
     res1 = c.run("supervisorctl status", target_spec="remote")
 
+    # TODO: This is insufficient when multiple uwsgi-processes are running
     assert "uwsgi" in res1.stdout
     assert "RUNNING" in res1.stdout
 
